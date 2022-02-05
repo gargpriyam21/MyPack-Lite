@@ -1,0 +1,82 @@
+<%= form_with(model: course) do |form| %>
+  <% if course.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
+
+      <ul>
+        <% course.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div>
+    <%= form.label :instructor_name, style: "display: block" %>
+    <%= form.text_field :instructor_name %>
+  </div>
+
+  <div>
+    <%= form.label :weekdays, style: "display: block" %>
+    <%= form.text_field :weekdays %>
+  </div>
+
+  <div>
+    <%= form.label :start_time, style: "display: block" %>
+    <%= form.text_field :start_time %>
+  </div>
+
+  <div>
+    <%= form.label :end_time, style: "display: block" %>
+    <%= form.text_field :end_time %>
+  </div>
+
+  <div>
+    <%= form.label :course_code, style: "display: block" %>
+    <%= form.text_field :course_code %>
+  </div>
+
+  <div>
+    <%= form.label :capacity, style: "display: block" %>
+    <%= form.number_field :capacity %>
+  </div>
+
+  <div>
+    <%= form.label :students_enrolled, style: "display: block" %>
+    <%= form.number_field :students_enrolled %>
+  </div>
+
+  <div>
+    <%= form.label :waitlist_capacity, style: "display: block" %>
+    <%= form.number_field :waitlist_capacity %>
+  </div>
+
+  <div>
+    <%= form.label :students_waitlisted, style: "display: block" %>
+    <%= form.number_field :students_waitlisted %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div>
+    <%= form.label :room, style: "display: block" %>
+    <%= form.text_field :room %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
