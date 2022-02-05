@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @waitlist %>
+
+<div>
+  <%= link_to "Edit this waitlist", edit_waitlist_path(@waitlist) %> |
+  <%= link_to "Back to waitlists", waitlists_path %>
+
+  <%= button_to "Destroy this waitlist", @waitlist, method: :delete %>
+</div>

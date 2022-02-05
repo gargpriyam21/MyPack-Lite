@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Waitlists</h1>
+
+<div id="waitlists">
+  <% @waitlists.each do |waitlist| %>
+    <%= render waitlist %>
+    <p>
+      <%= link_to "Show this waitlist", waitlist %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New waitlist", new_waitlist_path %>
