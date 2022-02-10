@@ -1,4 +1,5 @@
 class InstructorsController < ApplicationController
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_instructor, only: %i[ show edit update destroy ]
 
   # GET /instructors or /instructors.json

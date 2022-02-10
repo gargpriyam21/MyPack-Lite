@@ -22,13 +22,12 @@ class SessionsController < ApplicationController
         session[:user_role] = user.user_role
         redirect_to root_url
       else
-        flash.now[:alert] = "Email or password is invalid"
-        render "new"
+        flash[:alert] = "Email or password is invalid"
+        redirect_to login_path
       end
     else
-      # puts "LODU"
-      flash.now[:alert] = "No user found"
-      render "new"
+      flash[:alert] = "No user found"
+      redirect_to login_path
     end
   end
 
