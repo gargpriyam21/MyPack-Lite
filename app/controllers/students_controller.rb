@@ -1,4 +1,5 @@
 class StudentsController < ApplicationController
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_student, only: %i[ show edit update destroy ]
 
   # GET /students or /students.json

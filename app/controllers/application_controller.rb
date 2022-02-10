@@ -14,6 +14,5 @@ class ApplicationController < ActionController::Base
     if current_user.nil?
       redirect_to root_path
     end
-    # unless current_user.nil?
   end
 end
