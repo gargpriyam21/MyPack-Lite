@@ -10,16 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_05_233502) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_02_05_233502) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
     t.string "password"
     t.string "name"
     t.string "email"
     t.string "phone_number"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["admin_id"], name: "index_admins_on_admin_id", unique: true
   end
 
@@ -37,16 +36,16 @@ ActiveRecord::Schema.define(version: 2022_02_05_233502) do
     t.integer "students_waitlisted"
     t.string "status"
     t.string "room"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["course_code"], name: "index_courses_on_course_code", unique: true
   end
 
   create_table "enrollments", force: :cascade do |t|
     t.string "student_id"
     t.string "course_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "instructors", force: :cascade do |t|
@@ -55,8 +54,8 @@ ActiveRecord::Schema.define(version: 2022_02_05_233502) do
     t.string "email"
     t.string "password"
     t.string "department"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["instructor_id"], name: "index_instructors_on_instructor_id", unique: true
   end
 
@@ -65,19 +64,19 @@ ActiveRecord::Schema.define(version: 2022_02_05_233502) do
     t.string "student_id"
     t.string "email"
     t.string "password"
-    t.datetime "date_of_birth", precision: 6
+    t.datetime "date_of_birth"
     t.string "phone_number"
     t.string "major"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_students_on_student_id", unique: true
   end
 
   create_table "waitlists", force: :cascade do |t|
     t.string "student_id"
     t.string "course_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

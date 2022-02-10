@@ -1,5 +1,7 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy ]
+  before_action :authorized, only: [:index]
+
 
   # GET /courses or /courses.json
   def index
@@ -10,8 +12,15 @@ class CoursesController < ApplicationController
   def show
   end
 
+  def show_instructor_courses
+    @courses = Course.find_by(instructor_name: params[:@current_user.name])
+  end
+
   # GET /courses/new
   def new
+    if @course.instructor_name != @current_user.name
+      redirect_to root_path
+    end
     @course = Course.new
   end
 
@@ -21,8 +30,10 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
+    if @course.instructor_name != @current_user.name
+      redirect_to root_path
+    end
     @course = Course.new(course_params)
-
     respond_to do |format|
       if @course.save
         format.html { redirect_to course_url(@course), notice: "Course was successfully created." }
@@ -36,6 +47,9 @@ class CoursesController < ApplicationController
 
   # PATCH/PUT /courses/1 or /courses/1.json
   def update
+    if @course.instructor_name != @current_user.name
+      redirect_to root_path
+    end
     respond_to do |format|
       if @course.update(course_params)
         format.html { redirect_to course_url(@course), notice: "Course was successfully updated." }
@@ -49,6 +63,9 @@ class CoursesController < ApplicationController
 
   # DELETE /courses/1 or /courses/1.json
   def destroy
+    if @course.instructor_name != @current_user.name
+      redirect_to root_path
+    end
     @course.destroy
 
     respond_to do |format|
@@ -65,6 +82,6 @@ class CoursesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def course_params
-      params.require(:course).permit(:name, :description, :instructor_name, :weekdays, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :waitlist_capacity, :students_waitlisted, :status, :room)
+      params.require(:course).permit(:name, :description, :instructor_name, :weekdays, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :status, :room)
     end
 end
