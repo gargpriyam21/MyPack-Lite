@@ -21,6 +21,9 @@ class InstructorsController < ApplicationController
 
   # POST /instructors or /instructors.json
   def create
+    if current_user != 'admin'
+      redirect_to root_path
+    end
     @instructor = Instructor.new(instructor_params)
 
     respond_to do |format|
@@ -36,6 +39,9 @@ class InstructorsController < ApplicationController
 
   # PATCH/PUT /instructors/1 or /instructors/1.json
   def update
+    if current_user != 'admin'
+      redirect_to root_path
+    end
     respond_to do |format|
       if @instructor.update(instructor_params)
         format.html { redirect_to instructor_url(@instructor), notice: "Instructor was successfully updated." }
@@ -49,6 +55,9 @@ class InstructorsController < ApplicationController
 
   # DELETE /instructors/1 or /instructors/1.json
   def destroy
+    if current_user != 'admin'
+      redirect_to root_path
+    end
     @instructor.destroy
 
     respond_to do |format|
