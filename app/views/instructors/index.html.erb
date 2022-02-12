@@ -1,14 +1,38 @@
 <p style="color: green"><%= notice %></p>
 
 <h1>Instructors</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Instructor</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Department</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
 
-<div id="instructors">
-  <% @instructors.each do |instructor| %>
-    <%= render instructor %>
-    <p>
-      <%= link_to "Show this instructor", instructor %>
-    </p>
-  <% end %>
-</div>
+  <tbody>
+    <% @instructors.each do |instructor| %>
+      <tr>
+        <td><%= instructor.instructor_id %></td>
+        <td><%= instructor.name %></td>
+        <td><%= instructor.email %></td>
+        <td><%= instructor.department %></td>
+        <td><%= link_to 'Show', instructor %></td>
+        <td><%= link_to "Edit this instructor", edit_instructor_path(instructor) %></td>
+        <td><%= link_to 'Destroy', instructor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<!--<div id="instructors">-->
+  <%# @instructors.each do |instructor| %>
+    <%#= render instructor %>
+<!--    <p>-->
+      <%#= link_to "Show this instructor", instructor %>
+<!--    </p>-->
+  <%# end %>
+<!--</div>-->
 
 <%= link_to "New instructor", new_instructor_path %>
