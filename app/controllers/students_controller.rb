@@ -33,7 +33,7 @@ class StudentsController < ApplicationController
         @student = Student.new(student_params)
         @student.user_id = @user.id
         if @student.save
-          if (not current_user.nil? and current_user.user_type == "admin")
+          if (not current_user.nil? and current_user.user_role == "admin")
             format.html { redirect_to @student, notice: "Student was successfully created by Admin." }
             format.json { render :show, status: :created, location: @student }
           else
