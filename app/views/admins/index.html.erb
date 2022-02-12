@@ -2,24 +2,24 @@
 
 <h1>Admin</h1>
 
-<div id="admins">
-  <% @admins.each do |admin| %>
-    <%= render admin %>
-    <p>
-      <%= link_to "Show this admin", admin %>
-    </p>
-  <% end %>
-</div>
+<!--<div id="admins">-->
+  <%# @admins.each do |admin| %>
+    <%#= render admin %>
+<!--    <p>-->
+      <%#= link_to "Show this admin", admin %>
+<!--    </p>-->
+  <%# end %>
+<!--</div>-->
 
 <%#= link_to "New admin", new_admin_path %>
 
-<%= link_to " Create New instructor", new_instructor_path %>
+<%= link_to " View Instructor", instructors_path %>
 
 <br>
 
-<%= link_to "Create New student", new_student_path %>
+<%= link_to " View Student", students_path %>
 
 <br>
 
-<%= link_to " Create New course", new_course_path %>
+<%= link_to " View Course", courses_path %>
 
