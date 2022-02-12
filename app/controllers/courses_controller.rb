@@ -1,27 +1,34 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy ]
   before_action :authorized, only: [:index]
-
+  before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /courses or /courses.json
   def index
+    @is_allowed = false
+    if !check_permissions?(session[:user_role], "create_course")
+      @is_allowed = true
+      @courses = Course.where(user_id: current_user.id)
+    end
     @courses = Course.all
   end
 
   # GET /courses/1 or /courses/1.json
   def show
-  end
-
-  def show_instructor_courses
-    @courses = Course.find_by(instructor_name: params[:@current_user.name])
+    if !check_permissions?(session[:user_role], "show_course")
+      redirect_to root_path
+    end
   end
 
   # GET /courses/new
   def new
-    if @course.instructor_name != @current_user.name
+    if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
     @course = Course.new
+    if[!session[:user_type]]
+      redirect_to root_path
+    end
   end
 
   # GET /courses/1/edit
@@ -30,7 +37,7 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
-    if @course.instructor_name != @current_user.name
+    if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
     @course = Course.new(course_params)
@@ -47,7 +54,7 @@ class CoursesController < ApplicationController
 
   # PATCH/PUT /courses/1 or /courses/1.json
   def update
-    if @course.instructor_name != @current_user.name
+    if !check_permissions?(session[:user_role], "update_course")
       redirect_to root_path
     end
     respond_to do |format|
@@ -63,7 +70,7 @@ class CoursesController < ApplicationController
 
   # DELETE /courses/1 or /courses/1.json
   def destroy
-    if @course.instructor_name != @current_user.name
+    if !check_permissions?(session[:user_role], "delete_course")
       redirect_to root_path
     end
     @course.destroy
@@ -72,6 +79,11 @@ class CoursesController < ApplicationController
       format.html { redirect_to courses_url, notice: "Course was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def correct_user
+    @correctuser = Course.where(user_id: current_user.id)
+    redirect_to courses_path if @correctuser.nil?
   end
 
   private
