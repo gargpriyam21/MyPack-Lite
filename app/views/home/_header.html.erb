@@ -9,7 +9,7 @@
   <% elsif current_user.user_role == "instructor" %>
     Name: <%= Instructor.find_by_email(current_user.email).name.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %>
     <br><br>
-    Role: <strong><u><%= current_user.user_role.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %></u></strong>
+    Role: <strong><i><%= current_user.user_role.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %></i></strong>
   <% elsif current_user.user_role == "admin" %>
     Name: Admin
     <br><br>
