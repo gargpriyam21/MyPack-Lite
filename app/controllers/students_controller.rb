@@ -18,19 +18,32 @@ class StudentsController < ApplicationController
 
   # GET /students/1/edit
   def edit
+    # TODO check permissions
   end
 
   # POST /students or /students.json
   def create
-    @student = Student.new(student_params)
+    email = params[:student][:email]
+    user = { :email => email, :user_role => 'student' }
+    @student = nil
+    @user = User.new(user)
 
     respond_to do |format|
-      if @student.save
-        format.html { redirect_to student_url(@student), notice: "Student was successfully created." }
-        format.json { render :show, status: :created, location: @student }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @student.errors, status: :unprocessable_entity }
+      if @user.save
+        @student = Student.new(student_params)
+        @student.user_id = @user.id
+        if @student.save
+          if (not current_user.nil? and current_user.user_type == "admin")
+            format.html { redirect_to @student, notice: "Student was successfully created by Admin." }
+            format.json { render :show, status: :created, location: @student }
+          else
+            format.html { redirect_to login_path, notice: "Student was successfully created." }
+            format.json { render :show, status: :created, location: @student }
+          end
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @student.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -51,7 +64,7 @@ class StudentsController < ApplicationController
   # DELETE /students/1 or /students/1.json
   def destroy
     @student.destroy
-
+    # TODO check permissions
     respond_to do |format|
       format.html { redirect_to students_url, notice: "Student was successfully destroyed." }
       format.json { head :no_content }
@@ -59,13 +72,14 @@ class StudentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_student
-      @student = Student.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def student_params
-      params.require(:student).permit(:name, :student_id, :email, :password, :date_of_birth, :phone_number, :major)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_student
+    @student = Student.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def student_params
+    params.require(:student).permit(:name, :student_id, :email, :password, :date_of_birth, :phone_number, :major)
+  end
 end
