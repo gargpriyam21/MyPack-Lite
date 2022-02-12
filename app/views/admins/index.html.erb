@@ -1,6 +1,6 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Admins</h1>
+<h1>Admin</h1>
 
 <div id="admins">
   <% @admins.each do |admin| %>
@@ -11,4 +11,15 @@
   <% end %>
 </div>
 
-<%= link_to "New admin", new_admin_path %>
+<%#= link_to "New admin", new_admin_path %>
+
+<%= link_to " Create New instructor", new_instructor_path %>
+
+<br>
+
+<%= link_to "Create New student", new_student_path %>
+
+<br>
+
+<%= link_to " Create New course", new_course_path %>
+
