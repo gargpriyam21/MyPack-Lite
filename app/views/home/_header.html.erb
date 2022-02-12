@@ -1,0 +1,18 @@
+<h1>MyPack Lite</h1>
+
+<% if current_user %>
+<!--  Currently logged in as:  <strong><%#= current_user.user_role %></strong>-->
+  <% if current_user.user_role == "student" %>
+    Name: <%= Student.find_by_email(current_user.email).name.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %>
+    <br><br>
+    Role: <strong><%= current_user.user_role.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %></strong>
+  <% elsif current_user.user_role == "instructor" %>
+    Name: <%= Instructor.find_by_email(current_user.email).name.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %>
+    <br><br>
+    Role: <strong><i><%= current_user.user_role.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %></i></strong>
+  <% elsif current_user.user_role == "admin" %>
+    Name: Admin
+    <br><br>
+    Role: <u><%= current_user.user_role.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %></u>
+  <% end %>
+<% end %>

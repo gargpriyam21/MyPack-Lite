@@ -10,16 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_05_233502) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_12_102333) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
-    t.string "password"
+    t.string "password_digest"
     t.string "name"
     t.string "email"
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["admin_id"], name: "index_admins_on_admin_id", unique: true
+    t.index ["user_id"], name: "index_admins_on_user_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -52,24 +54,36 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_05_233502) do
     t.string "instructor_id"
     t.string "name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.string "department"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["instructor_id"], name: "index_instructors_on_instructor_id", unique: true
+    t.index ["user_id"], name: "index_instructors_on_user_id"
   end
 
   create_table "students", force: :cascade do |t|
     t.string "name"
     t.string "student_id"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.datetime "date_of_birth"
     t.string "phone_number"
     t.string "major"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["student_id"], name: "index_students_on_student_id", unique: true
+    t.index ["user_id"], name: "index_students_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "user_role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "waitlists", force: :cascade do |t|
@@ -79,4 +93,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_05_233502) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "admins", "users"
+  add_foreign_key "instructors", "users"
+  add_foreign_key "students", "users"
 end

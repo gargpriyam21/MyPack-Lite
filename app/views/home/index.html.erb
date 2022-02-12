@@ -1,0 +1,22 @@
+<p id=”notice”><%= notice %></p>
+
+<p>Welcome to the Student Enrollment system</p>
+<p>Enroll In courses at the snap of your finger </p>
+
+<% if current_user %>
+  </br>
+  <%= link_to "All Courses", courses_path %>
+  <% if current_user.user_role == "student" %>
+    <%= link_to "My Enrollments", enrollments_path %>
+  <% elsif current_user.user_role == "instructor" %>
+    <%= link_to "My Courses", enrollments_path %>
+  <% elsif current_user.user_role == "admin" %>
+    <%= link_to "All Instructors", instructors_path %>
+    <%= link_to "All Students", students_path %>
+  <% end %>
+  <%= link_to "Logout", logout_path %><br>
+<% else %>
+  <%= link_to "Student Signup", student_signup_path %> or
+  <%= link_to "Instructor Signup", instructor_signup_path %> or
+  <%= link_to "Login", login_path %>
+<% end %>
