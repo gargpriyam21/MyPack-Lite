@@ -3,4 +3,5 @@ class Instructor < ApplicationRecord
   has_many :students
   has_many :courses
   validates :email_address, presence: true, uniqueness: true
+  belongs_to :user
 end
