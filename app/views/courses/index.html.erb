@@ -32,6 +32,9 @@
       <% if current_user.user_role == 'student' %>
         <td><%= link_to 'Enroll', enroll_course_path(course), method: :post %></td>
       <% end %>
+      <% if current_user.user_role == 'instructor' %>
+        <td><%= link_to "Students", all_students_course_path(course) %></td>
+      <% end %>
       <% if current_user.user_role == 'admin' %>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
         <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -31,6 +31,12 @@ Rails.application.routes.draw do
       get 'drop'
     end
   end
+
+  resources :courses do
+    member do
+      get 'all_students'
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

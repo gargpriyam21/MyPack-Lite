@@ -10,7 +10,7 @@
     <% else %>
       <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
     <% end %>
-  <% else %>
+  <% elsif current_user.user_role == 'admin' %>
     <%= link_to "Edit this course", edit_course_path(@course) %>
     <%= button_to "Destroy this course", @course, method: :delete %>
   <% end %>
