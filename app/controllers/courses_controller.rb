@@ -25,6 +25,24 @@ class CoursesController < ApplicationController
     @courses = Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
   end
 
+  def all_students
+    puts "Teri maa ka bhosda rails"
+    @course = Course.find_by_id(params[:id])
+    puts @course.id
+    @enrollments = Enrollment.where(course_id: @course.id)
+    puts @enrollments.inspect
+
+    students = []
+
+    @enrollments.each do |enrollment|
+      students.append(enrollment.student_id)
+    end
+
+    puts students
+
+    @students = Student.where(id: students)
+  end
+
   def show_student_enrolled_courses
     if !check_permissions?(session[:user_role], "show_enrolled_course")
       redirect_to root_path
