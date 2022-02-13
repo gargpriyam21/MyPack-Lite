@@ -22,7 +22,6 @@ class CoursesController < ApplicationController
     if !check_permissions?(session[:user_role], "show_instructor_student")
       redirect_to root_path
     end
-    puts Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
     @courses = Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
   end
 
@@ -118,6 +117,7 @@ class CoursesController < ApplicationController
       end
     end
   end
+
 
   def drop
     if !check_permissions?(session[:user_role], "drop_course")
