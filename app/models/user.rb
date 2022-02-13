@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_one :instructor
-  has_one :student
-  has_one :admin
+  has_one :instructor, dependent: :destroy
+  has_one :student, dependent: :destroy
+  has_one :admin, dependent: :destroy
 end

@@ -1,13 +1,12 @@
 class CoursesController < ApplicationController
+  before_action :authorized, only: [:index]
   before_action :set_course, only: %i[ show edit update destroy ]
-  # before_action :authorized, only: [:index]
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /courses or /courses.json
   def index
-    @is_allowed = false
-    if !check_permissions?(session[:user_role], "create_course")
-      @is_allowed = true
+    if !check_permissions?(session[:user_role], "view_course")
+      redirect_to root_path
     end
     @courses = Course.all
   end
@@ -28,6 +27,9 @@ class CoursesController < ApplicationController
   end
 
   def show_student_enrolled_courses
+    if !check_permissions?(session[:user_role], "show_enrolled_course")
+      redirect_to root_path
+    end
     @enrollments = Enrollment.where(student_id: Student.find_by_user_id(session[:user_id]))
     courses = []
     @enrollments.each do |enrollment|
@@ -41,20 +43,20 @@ class CoursesController < ApplicationController
       redirect_to root_path
     end
     @course = Course.new
-    # if[!session[:user_role]]
-    #   redirect_to root_path
-    # end
   end
 
   # GET /courses/1/edit
   def edit
+    if !check_permissions?(session[:user_role], "edit_course")
+      redirect_to root_path
+    end
   end
 
   # POST /courses or /courses.json
   def create
-    # if !check_permissions?(session[:user_role], "create_course")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "create_course")
+      redirect_to root_path
+    end
     @course = Course.new(course_params)
     @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
     @course.instructor_name = Instructor.find_by_user_id(session[:user_id]).name
@@ -73,6 +75,9 @@ class CoursesController < ApplicationController
   end
 
   def enroll
+    if !check_permissions?(session[:user_role], "enroll_course")
+      redirect_to root_path
+    end
     @course = Course.find_by_id(params[:id])
     @student = Student.find_by_user_id(session[:user_id])
     @instructor = Instructor.find_by_id(@course.instructor_id)
@@ -88,18 +93,18 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       if already_enrolled
-        format.html { redirect_to courses_path, alert: @student.name.to_s + " already enrolled in " + @course.course_code.to_s }
+        format.html { redirect_to courses_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
         format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       else
         if @course.status == 'CLOSED'
-          format.html { redirect_to courses_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since the course is CLOSED" }
+          format.html { redirect_to courses_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
         else
           if @enrollment.save
-            format.html { redirect_to courses_path, notice: @student.name.to_s + " successfully enrolled in " + @course.course_code.to_s }
+            format.html { redirect_to courses_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
             format.json { render :show, status: :created, location: @enrollment }
             @course.update(students_enrolled: (@course.students_enrolled + 1))
-            if (@course.capacity == @course.students_enrolled)
+            if @course.capacity == @course.students_enrolled
               @course.update(status: "CLOSED")
             end
           else
@@ -112,14 +117,18 @@ class CoursesController < ApplicationController
   end
 
   def drop
+    if !check_permissions?(session[:user_role], "drop_course")
+      redirect_to root_path
+    end
+
     @course = Course.find_by_id(params[:id])
     @student = Student.find_by_user_id(session[:user_id])
 
     Enrollment.where(student_id: @student.id, course_id: @course.id)[0].destroy
 
     respond_to do |format|
-      format.html { redirect_to student_enrollments_path, notice: @student.name.to_s + " successfully dropped " + @course.course_code.to_s }
-      if (@course.status == "CLOSED")
+      format.html { redirect_to student_enrollments_path, notice: @student.name.to_s + " has successfully dropped " + @course.course_code.to_s }
+      if @course.status == "CLOSED"
         @course.update(status: "OPEN")
       end
       @course.update(students_enrolled: (@course.students_enrolled - 1))
