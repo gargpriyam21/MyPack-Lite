@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy ]
   # before_action :authorized, only: [:index]
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  # before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /courses or /courses.json
   def index
@@ -19,7 +19,7 @@ class CoursesController < ApplicationController
     end
   end
 
-  def showinstructorcourses
+  def show_instructor_courses
     if !check_permissions?(session[:user_role], "show_instructor_student")
       redirect_to root_path
     end
@@ -44,12 +44,18 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
-    # if !check_permissions?(session[:user_role], "create_course")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "create_course")
+      redirect_to root_path
+    end
+
     @course = Course.new(course_params)
-    puts Instructor.find_by_user_id(session[:user_id]).id
     @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
+    @course = Course.new(course_params)
+    @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
+    @course.instructor_name = Instructor.find_by_user_id(session[:user_id]).name
+    @course.students_enrolled = 0
+    @course.students_waitlisted = 0
+    @course.status = "OPEN"
     respond_to do |format|
       if @course.save
         format.html { redirect_to course_url(@course), notice: "Course was successfully created." }
@@ -85,15 +91,15 @@ class CoursesController < ApplicationController
     @course.destroy
 
     respond_to do |format|
-      format.html { redirect_to courses_url, notice: "Course was successfully destroyed." }
+      format.html { redirect_to root_path, notice: "Course was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
-  def correct_user
-    @correctuser = Course.where(user_id: current_user.id)
-    redirect_to courses_path if @correctuser.nil?
-  end
+  # def correct_user
+  #   @correct_user =
+  #   redirect_to courses_path if @correctuser.nil?
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
