@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   get 'instructor_signup', to: "instructors#new", as: 'instructor_signup'
   get 'login', to: "sessions#new", as: 'login'
   get 'logout', to: "sessions#destroy", as: 'logout'
-  get 'mycourses', to: "courses#showinstructorcourses", as: "mycourses"
+  get 'mycourses', to: "courses#show_instructor_courses", as: "mycourses"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

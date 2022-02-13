@@ -4,9 +4,9 @@ class InstructorsController < ApplicationController
 
   # GET /instructors or /instructors.json
   def index
-    # if !check_permissions?(session[:user_role], "show_instructor")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "show_instructor")
+      redirect_to root_path
+    end
     @instructors = Instructor.all
   end
 
@@ -16,9 +16,9 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/new
   def new
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
-    #   redirect_to root_path
-    # end
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+      redirect_to root_path
+    end
     @instructor = Instructor.new
   end
 
