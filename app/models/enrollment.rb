@@ -1,4 +1,4 @@
 class Enrollment < ApplicationRecord
   belongs_to :student
-  belongs_to :course, dependent: :destroy
+  belongs_to :course
 end

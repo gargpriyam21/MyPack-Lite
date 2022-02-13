@@ -1,4 +1,5 @@
 class AdminsController < ApplicationController
+  # skip_before_action :authorized, only: [:new, :create]
   before_action :set_admin, only: %i[ show edit update destroy ]
   #Include Foreign Keys
   # GET /admins or /admins.json

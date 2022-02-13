@@ -3,9 +3,12 @@
 <%= render @course %>
 
 <div>
-  <% if current_user == 'student' %>
-    <%= link_to "Enroll", edit_enrollments_path(@course) %>
-    <%= link_to "Unenroll", edit_enrollments_path(@course) %>
+  <% if current_user.user_role == 'student' %>
+    <% if Enrollment.where(student_id: User.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+      <%= link_to "Enroll", enroll_course_path(@course) %>
+    <% else %>
+      <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
+    <% end %>
   <% else %>
     <%= link_to "Edit this course", edit_course_path(@course) %>
     <%= button_to "Destroy this course", @course, method: :delete %>
