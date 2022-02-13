@@ -9,14 +9,17 @@
   <% if current_user.user_role == "student" %>
     <%= link_to "My Enrollments", student_enrollments_path %> <br><br>
   <% elsif current_user.user_role == "instructor" %>
-    <%= link_to "My Courses", mycourses_path %> <br><br>
+    <%= link_to "My Courses", instructor_courses_path %> <br><br>
+    <%= link_to "My Students",show_instructor_students_enrolled_path %><br><br>
+<!--    <%#= link_to "New Enrollment", new_enrollment_path %><br><br>-->
   <% elsif current_user.user_role == "admin" %>
     <%= link_to "All Instructors", instructors_path %> <br><br>
     <%= link_to "All Students", students_path %> <br><br>
+    <%= link_to "New Enrollment", new_enrollments_path %>
   <% end %>
   <%= link_to "Logout", logout_path %><br><br>
 <% else %>
+  <%= link_to "Login", login_path %><br><br>
   <%= link_to "Student Signup", student_signup_path %> <br><br>
-  <%= link_to "Instructor Signup", instructor_signup_path %> <br><br>
-  <%= link_to "Login", login_path %>
+  <%= link_to "Instructor Signup", instructor_signup_path %>
 <% end %>
