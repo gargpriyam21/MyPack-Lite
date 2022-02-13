@@ -13,6 +13,18 @@ Rails.application.routes.draw do
   get 'login', to: "sessions#new", as: 'login'
   get 'logout', to: "sessions#destroy", as: 'logout'
   get 'mycourses', to: "courses#show_instructor_courses", as: "mycourses"
+  get 'mycourses', to: "courses#showinstructorcourses", as: "mycourses"
+  get 'student_enrollments', to: "courses#show_student_enrolled_courses", as: "student_enrollments"
+  resources :courses do
+    member do
+      get 'enroll'
+    end
+  end
+  resources :courses do
+    member do
+      get 'drop'
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
