@@ -1,24 +1,27 @@
 class InstructorsController < ApplicationController
-  # skip_before_action :authorized, only: [:new, :create]
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_instructor, only: %i[ show edit update destroy ]
 
   # GET /instructors or /instructors.json
   def index
-    # if !check_permissions?(session[:user_role], "show_instructor")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "view_instructor")
+      redirect_to root_path
+    end
     @instructors = Instructor.all
   end
 
   # GET /instructors/1 or /instructors/1.json
   def show
+    if !check_permissions?(session[:user_role], "show_instructor")
+      redirect_to root_path
+    end
   end
 
   # GET /instructors/new
   def new
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
-    #   redirect_to root_path
-    # end
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+      redirect_to root_path
+    end
     @instructor = Instructor.new
   end
 
@@ -31,6 +34,9 @@ class InstructorsController < ApplicationController
 
   # POST /instructors or /instructors.json
   def create
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+      redirect_to root_path
+    end
     email = params[:instructor][:email]
     user = { :email => email, :user_role => 'instructor' }
     @instructor = nil
@@ -79,7 +85,6 @@ class InstructorsController < ApplicationController
       redirect_to root_path
     end
     @instructor.destroy
-
     respond_to do |format|
       format.html { redirect_to instructors_url, notice: "Instructor was successfully destroyed." }
       format.json { head :no_content }

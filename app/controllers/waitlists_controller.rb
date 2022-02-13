@@ -1,4 +1,5 @@
 class WaitlistsController < ApplicationController
+  skip_before_action :authorized, only: [:index]
   before_action :set_waitlist, only: %i[ show edit update destroy ]
 
   # GET /waitlists or /waitlists.json
