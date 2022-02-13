@@ -1,28 +1,42 @@
 class StudentsController < ApplicationController
-  # skip_before_action :authorized, only: [:new, :create]
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_student, only: %i[ show edit update destroy ]
 
   # GET /students or /students.json
   def index
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "view_student"))
+      redirect_to root_path
+    end
     @students = Student.all
   end
 
   # GET /students/1 or /students/1.json
   def show
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "show_student"))
+      redirect_to root_path
+    end
   end
 
   # GET /students/new
   def new
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_student"))
+      redirect_to root_path
+    end
     @student = Student.new
   end
 
   # GET /students/1/edit
   def edit
-    # TODO check permissions
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "edit_student"))
+      redirect_to root_path
+    end
   end
 
   # POST /students or /students.json
   def create
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_student"))
+      redirect_to root_path
+    end
     email = params[:student][:email]
     user = { :email => email, :user_role => 'student' }
     @student = nil
@@ -41,6 +55,7 @@ class StudentsController < ApplicationController
             format.json { render :show, status: :created, location: @student }
           end
         else
+          User.where(id: @user.id)[0].destroy
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @student.errors, status: :unprocessable_entity }
         end
@@ -50,6 +65,9 @@ class StudentsController < ApplicationController
 
   # PATCH/PUT /students/1 or /students/1.json
   def update
+    if(!current_user.nil? && !check_permissions?(session[:user_role], "update_student"))
+      redirect_to root_path
+    end
     respond_to do |format|
       if @student.update(student_params)
         format.html { redirect_to student_url(@student), notice: "Student was successfully updated." }
@@ -63,8 +81,29 @@ class StudentsController < ApplicationController
 
   # DELETE /students/1 or /students/1.json
   def destroy
+    # if(!current_user.nil? && !check_permissions?(session[:user_role], "delete_student"))
+    #   redirect_to root_path
+    # end
+    #
+    # TODO Enrollment when stuydent destroyed
+
+    @enrollments = Enrollment.where(student_id: @student.id)
+    courses = []
+    @enrollments.each do |enrollment|
+      courses.append(enrollment.course_id)
+    end
+    puts "-------------------------------------"
+    puts "Student Destroyed:" + @student.name
+
+    @courses = Course.where(id: courses)
+    @courses.each do |course|
+      if course.status = "CLOSED"
+        course.update(status: "OPEN")
+      end
+      course.update(students_enrolled: (@course.students_enrolled - 1))
+    end
+
     @student.destroy
-    # TODO check permissions
     respond_to do |format|
       format.html { redirect_to students_url, notice: "Student was successfully destroyed." }
       format.json { head :no_content }

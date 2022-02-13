@@ -1,27 +1,42 @@
 class AdminsController < ApplicationController
-  # skip_before_action :authorized, only: [:new, :create]
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_admin, only: %i[ show edit update destroy ]
   #Include Foreign Keys
   # GET /admins or /admins.json
   def index
+    if !check_permissions?(session[:user_role], "view_admin")
+      redirect_to root_path
+    end
     @admins = Admin.all
   end
 
   # GET /admins/1 or /admins/1.json
   def show
+    if !check_permissions?(session[:user_role], "show_admin")
+      redirect_to root_path
+    end
   end
 
   # GET /admins/new
   def new
+    if !check_permissions?(session[:user_role], "create_admin")
+      redirect_to root_path
+    end
     @admin = Admin.new
   end
 
   # GET /admins/1/edit
   def edit
+    if !check_permissions?(session[:user_role], "edit_admin")
+      redirect_to root_path
+    end
   end
 
   # POST /admins or /admins.json
   def create
+    if !check_permissions?(session[:user_role], "create_admin")
+      redirect_to root_path
+    end
     @admin = Admin.new(admin_params)
 
     respond_to do |format|
@@ -37,6 +52,9 @@ class AdminsController < ApplicationController
 
   # PATCH/PUT /admins/1 or /admins/1.json
   def update
+    if !check_permissions?(session[:user_role], "update_admin")
+      redirect_to root_path
+    end
     respond_to do |format|
       if @admin.update(admin_params)
         format.html { redirect_to admin_url(@admin), notice: "Admin was successfully updated." }
@@ -50,6 +68,9 @@ class AdminsController < ApplicationController
 
   # DELETE /admins/1 or /admins/1.json
   def destroy
+    if !check_permissions?(session[:user_role], "delete_admin")
+      redirect_to root_path
+    end
     @admin.destroy
 
     respond_to do |format|

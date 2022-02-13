@@ -1,10 +1,11 @@
 <p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
 
 <%= render @course %>
 
 <div>
   <% if current_user.user_role == 'student' %>
-    <% if Enrollment.where(student_id: User.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+    <% if Enrollment.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
       <%= link_to "Enroll", enroll_course_path(@course) %>
     <% else %>
       <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
