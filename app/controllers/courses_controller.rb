@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
-  before_action :authorized, only: [:index]
   before_action :set_course, only: %i[ show edit update destroy ]
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  # before_action :authorized, only: [:index]
+  # before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /courses or /courses.json
   def index
@@ -18,12 +18,29 @@ class CoursesController < ApplicationController
     end
   end
 
-  def showinstructorcourses
+  def show_instructor_courses
     if !check_permissions?(session[:user_role], "show_instructor_student")
       redirect_to root_path
     end
-    puts Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
     @courses = Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
+  end
+
+  def all_students
+    puts "Teri maa ka bhosda rails"
+    @course = Course.find_by_id(params[:id])
+    puts @course.id
+    @enrollments = Enrollment.where(course_id: @course.id)
+    puts @enrollments.inspect
+
+    students = []
+
+    @enrollments.each do |enrollment|
+      students.append(enrollment.student_id)
+    end
+
+    puts students
+
+    @students = Student.where(id: students)
   end
 
   def show_student_enrolled_courses
@@ -43,6 +60,9 @@ class CoursesController < ApplicationController
       redirect_to root_path
     end
     @course = Course.new
+    # if[!session[:user_role]]
+    #   redirect_to root_path
+    # end
   end
 
   # GET /courses/1/edit
@@ -116,6 +136,7 @@ class CoursesController < ApplicationController
     end
   end
 
+
   def drop
     if !check_permissions?(session[:user_role], "drop_course")
       redirect_to root_path
@@ -159,15 +180,15 @@ class CoursesController < ApplicationController
     @course.destroy
 
     respond_to do |format|
-      format.html { redirect_to courses_url, notice: "Course was successfully destroyed." }
+      format.html { redirect_to root_path, notice: "Course was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
-  def correct_user
-    @correctuser = Course.where(user_id: current_user.id)
-    redirect_to courses_path if @correctuser.nil?
-  end
+  # def correct_user
+  #   @correct_user =
+  #   redirect_to courses_path if @correctuser.nil?
+  # end
 
   private
 

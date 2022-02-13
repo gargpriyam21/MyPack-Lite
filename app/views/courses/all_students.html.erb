@@ -1,0 +1,31 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Students</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Student Code</th>
+    <th>Student Name</th>
+    <th>Email</th>
+    <th>Date of Birth</th>
+    <th>Phone Number</th>
+    <th>Major</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @students.each do |student| %>
+    <tr>
+      <td><%= student.student_id %></td>
+      <td><%= student.name %></td>
+      <td><%= student.email %></td>
+      <td><%= student.date_of_birth %></td>
+      <td><%= student.phone_number %></td>
+      <td><%= student.major %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>

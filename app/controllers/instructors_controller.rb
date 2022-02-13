@@ -1,5 +1,5 @@
 class InstructorsController < ApplicationController
-  skip_before_action :authorized, only: [:new, :create]
+  # skip_before_action :authorized, only: [:new, :create]
   before_action :set_instructor, only: %i[ show edit update destroy ]
 
   # GET /instructors or /instructors.json
@@ -85,6 +85,7 @@ class InstructorsController < ApplicationController
       redirect_to root_path
     end
     @instructor.destroy
+
     respond_to do |format|
       format.html { redirect_to instructors_url, notice: "Instructor was successfully destroyed." }
       format.json { head :no_content }
