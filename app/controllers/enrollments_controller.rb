@@ -1,5 +1,4 @@
 class EnrollmentsController < ApplicationController
-  skip_before_action :authorized, only: [:new, :create]
   before_action :set_enrollment, only: %i[ show edit update destroy ]
 
   # GET /enrollments or /enrollments.json
@@ -33,6 +32,9 @@ class EnrollmentsController < ApplicationController
   end
 
   def show_instructor_students_enrolled
+    if !check_permissions?(session[:user_role], "show_instructor_students_enrolled")
+      redirect_to root_path
+    end
     @enrollments = Enrollment.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
   end
 
@@ -99,9 +101,9 @@ class EnrollmentsController < ApplicationController
   end
 
   def unenroll
-    # if !check_permissions?(session[:user_role], "unenroll_course")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "unenroll_course")
+      redirect_to root_path
+    end
 
     @enrollment = Enrollment.find_by_id(params[:id])
 
@@ -119,37 +121,24 @@ class EnrollmentsController < ApplicationController
 
   # DELETE /enrollments/1 or /enrollments/1.json
   def destroy
-    # if !check_permissions?(session[:user_role], "delete_enrollment")
-    #   redirect_to root_path
-    # end
-    # @course = Course.find_by_id(@enrollment.course_id)
-    # if @course.status = "CLOSED"
-    #   @course.update(status: "OPEN")
-    # end
-    # @course.update(students_enrolled: (@course.students_enrolled - 1))
+    if !check_permissions?(session[:user_role], "delete_enrollment")
+      redirect_to root_path
+    end
 
-    puts "-------------------------------------"
-    puts "Student Destroyed:" + @student.name
-    # @enrollments = Enrollment.where(student_id: @student.id)
-    # courses = []
-    # @enrollments.each do |enrollment|
-    #   courses.append(enrollment.course_id)
-    # end
-    #
-    # @courses = Course.where(id: courses)
-    # @courses.each do |course|
-    #   if course.status = "CLOSED"
-    #     course.update(status: "OPEN")
-    #   end
-    #   course.update(students_enrolled: (@course.students_enrolled - 1))
-    # end
+    @courses = Course.find_by_id(id: @enrollment.course_id)
+    @courses.each do |course|
+      if course.status = "CLOSED"
+        course.update(status: "OPEN")
+      end
+      course.update(students_enrolled: (@course.students_enrolled - 1))
+    end
 
-    # @enrollment.destroy
+    @enrollment.destroy
 
-    # respond_to do |format|
-    #   format.html { redirect_to enrollments_url, notice: "Enrollment was successfully destroyed." }
-    #   format.json { head :no_content }
-    # end
+    respond_to do |format|
+      format.html { redirect_to enrollments_url, notice: "Enrollment was successfully destroyed." }
+      format.json { head :no_content }
+    end
   end
 
   private

@@ -2,7 +2,7 @@ class Instructor < ApplicationRecord
   has_secure_password
   has_many :students
   has_many :courses, dependent: :destroy
-  validates :email,:instructor_id, presence: true, uniqueness: true
+  validates :email, :instructor_id, presence: true, uniqueness: true
   belongs_to :user, dependent: :destroy
   validates :name, :password_digest, :department, presence: true
 
