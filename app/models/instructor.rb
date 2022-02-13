@@ -2,6 +2,6 @@ class Instructor < ApplicationRecord
   has_secure_password
   has_many :students
   has_many :courses
-  validates :email_address, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true
   belongs_to :user
 end

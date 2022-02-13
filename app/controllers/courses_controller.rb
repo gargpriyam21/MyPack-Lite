@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy ]
-  before_action :authorized, only: [:index]
+  # before_action :authorized, only: [:index]
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /courses or /courses.json
@@ -8,7 +8,6 @@ class CoursesController < ApplicationController
     @is_allowed = false
     if !check_permissions?(session[:user_role], "create_course")
       @is_allowed = true
-      @courses = Course.where(user_id: current_user.id)
     end
     @courses = Course.all
   end
@@ -20,15 +19,23 @@ class CoursesController < ApplicationController
     end
   end
 
+  def showinstructorcourses
+    if !check_permissions?(session[:user_role], "show_instructor_student")
+      redirect_to root_path
+    end
+    puts Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
+    @courses = Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
+  end
+
   # GET /courses/new
   def new
     if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
     @course = Course.new
-    if[!session[:user_type]]
-      redirect_to root_path
-    end
+    # if[!session[:user_role]]
+    #   redirect_to root_path
+    # end
   end
 
   # GET /courses/1/edit
@@ -37,10 +44,12 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
-    if !check_permissions?(session[:user_role], "create_course")
-      redirect_to root_path
-    end
+    # if !check_permissions?(session[:user_role], "create_course")
+    #   redirect_to root_path
+    # end
     @course = Course.new(course_params)
+    puts Instructor.find_by_user_id(session[:user_id]).id
+    @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
     respond_to do |format|
       if @course.save
         format.html { redirect_to course_url(@course), notice: "Course was successfully created." }

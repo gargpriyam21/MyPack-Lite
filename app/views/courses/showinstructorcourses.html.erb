@@ -29,11 +29,9 @@
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
       <td><%= course.status %></td>
       <td><%= link_to 'Show', course %></td>
-      <% if current_user.user_role == 'admin' %>
-        <td><%= link_to 'Edit', edit_course_path(course) %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      <% end %>
-      </tr>
+      <td><%= link_to 'Edit', edit_course_path(course) %></td>
+      <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
   <% end %>
   </tbody>
 </table>
@@ -41,15 +39,15 @@
 <br>
 
 <!--<div id="courses">-->
-  <%# @courses.each do |course| %>
-    <%#= render course %>
+<%# @courses.each do |course| %>
+<%#= render course %>
 <!--    <p>-->
-      <%#= link_to "Show this course", course %>
+<%#= link_to "Show this course", course %>
 <!--    </p>-->
-  <%# end %>
+<%# end %>
 <!--</div>-->
 
 <%# if current_user.user_role != 'student' %>
-  <%= link_to "New course", new_course_path %>
+<%= link_to "New course", new_course_path %>
 <%# end %>
 <%#= link_to 'Back', root_path %>
