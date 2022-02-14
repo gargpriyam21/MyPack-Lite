@@ -10,17 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_05_233502) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
-    t.string "password"
+    t.string "password_digest"
     t.string "name"
     t.string "email"
     t.string "phone_number"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["admin_id"], name: "index_admins_on_admin_id", unique: true
+    t.index ["user_id"], name: "index_admins_on_user_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -37,47 +38,74 @@ ActiveRecord::Schema.define(version: 2022_02_05_233502) do
     t.integer "students_waitlisted"
     t.string "status"
     t.string "room"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "instructor_id", null: false
     t.index ["course_code"], name: "index_courses_on_course_code", unique: true
+    t.index ["instructor_id"], name: "index_courses_on_instructor_id"
   end
 
   create_table "enrollments", force: :cascade do |t|
-    t.string "student_id"
-    t.string "course_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.string "student_code"
+    t.string "course_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "course_id", null: false
+    t.integer "student_id", null: false
+    t.integer "instructor_id", null: false
+    t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["instructor_id"], name: "index_enrollments_on_instructor_id"
+    t.index ["student_id"], name: "index_enrollments_on_student_id"
   end
 
   create_table "instructors", force: :cascade do |t|
     t.string "instructor_id"
     t.string "name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.string "department"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["instructor_id"], name: "index_instructors_on_instructor_id", unique: true
+    t.index ["user_id"], name: "index_instructors_on_user_id"
   end
 
   create_table "students", force: :cascade do |t|
     t.string "name"
     t.string "student_id"
     t.string "email"
-    t.string "password"
-    t.datetime "date_of_birth", precision: 6
+    t.string "password_digest"
+    t.datetime "date_of_birth"
     t.string "phone_number"
     t.string "major"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["student_id"], name: "index_students_on_student_id", unique: true
+    t.index ["user_id"], name: "index_students_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "user_role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "waitlists", force: :cascade do |t|
     t.string "student_id"
     t.string "course_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "admins", "users"
+  add_foreign_key "courses", "instructors"
+  add_foreign_key "enrollments", "courses"
+  add_foreign_key "enrollments", "instructors"
+  add_foreign_key "enrollments", "students"
+  add_foreign_key "instructors", "users"
+  add_foreign_key "students", "users"
 end

@@ -1,10 +1,12 @@
 <p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
 
 <h1>Courses</h1>
 
 <table>
   <thead>
   <tr>
+<<<<<<< HEAD
     <th>Name</th>
     <th>Description</th>
     <th>Instructor Name</th>
@@ -18,6 +20,16 @@
     <th>Waitlist Capacity</th>
     <th>Status</th>
     <th>Room</th>
+=======
+    <th>Course Code</th>
+    <th>Name</th>
+    <th>Instructor Name</th>
+    <th>Weekdays</th>
+    <th>Room</th>
+    <th>Time</th>
+    <th>Capacity</th>
+    <th>Status</th>
+>>>>>>> 2e47b44c5c83716775bf9fa0d6b8f27137185b74
     <th colspan="4"></th>
   </tr>
   </thead>
@@ -25,6 +37,7 @@
   <tbody>
   <% @courses.each do |course| %>
     <tr>
+<<<<<<< HEAD
       <td><%= course.name %></td>
       <td><%= course.description %></td>
       <td><%= course.instructor_name %></td>
@@ -42,11 +55,33 @@
       <td><%= link_to "Edit", edit_course_path(course) %></td>
       <td><%= link_to "New enrollment", new_enrollment_path %></td>
       <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+=======
+      <td><%= course.course_code %></td>
+      <td><%= course.name %></td>
+      <td><%= course.instructor_name %></td>
+      <td><%= course.weekdays %></td>
+      <td><%= course.room %></td>
+      <td><%= course.start_time + ' - ' + course.end_time %></td>
+      <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
+      <td><%= course.status %></td>
+      <td><%= link_to 'Show', course %></td>
+      <% if current_user.user_role == 'student' %>
+        <td><%= link_to 'Enroll', enroll_course_path(course), method: :post %></td>
+      <% end %>
+      <% if current_user.user_role == 'instructor' %>
+        <td><%= link_to "Students", all_students_course_path(course) %></td>
+      <% end %>
+      <% if current_user.user_role == 'admin' %>
+        <td><%= link_to 'Edit', edit_course_path(course) %></td>
+        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
+>>>>>>> 2e47b44c5c83716775bf9fa0d6b8f27137185b74
     </tr>
   <% end %>
   </tbody>
 </table>
 
+<<<<<<< HEAD
 <!--<div id="courses">-->
   <%# @courses.each do |course| %>
     <%#= render course %>
@@ -54,6 +89,20 @@
       <%#= link_to "Show this course", course %>
 <!--    </p>-->
   <%# end %>
+=======
+<br>
+
+<!--<div id="courses">-->
+<%# @courses.each do |course| %>
+<%#= render course %>
+<!--    <p>-->
+<%#= link_to "Show this course", course %>
+<!--    </p>-->
+<%# end %>
+>>>>>>> 2e47b44c5c83716775bf9fa0d6b8f27137185b74
 <!--</div>-->
 
-<%= link_to "New course", new_course_path %>
+<% if current_user.user_role != 'student' %>
+  <%= link_to "New course", new_course_path %>
+<% end %>
+<%#= link_to 'Back', root_path %>

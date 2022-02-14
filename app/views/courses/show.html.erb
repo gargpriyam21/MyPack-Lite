@@ -1,10 +1,19 @@
 <p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
 
 <%= render @course %>
 
 <div>
-  <%= link_to "Edit this course", edit_course_path(@course) %> |
-  <%= link_to "Back to courses", courses_path %>
+  <% if current_user.user_role == 'student' %>
+    <% if Enrollment.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+      <%= link_to "Enroll", enroll_course_path(@course) %>
+    <% else %>
+      <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
+    <% end %>
+  <% elsif current_user.user_role == 'admin' %>
+    <%= link_to "Edit this course", edit_course_path(@course) %>
+    <%= button_to "Destroy this course", @course, method: :delete %>
+  <% end %>
 
-  <%= button_to "Destroy this course", @course, method: :delete %>
+  <%= link_to "Back to courses", courses_path %>
 </div>
