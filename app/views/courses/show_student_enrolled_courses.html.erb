@@ -1,5 +1,4 @@
 <p style="color: green"><%= notice %></p>
-<b><p style="color: red"><%= alert %></p></b>
 
 <h1>Courses</h1>
 
@@ -14,7 +13,7 @@
     <th>Time</th>
     <th>Capacity</th>
     <th>Status</th>
-    <th colspan="4"></th>
+    <th colspan="2"></th>
   </tr>
   </thead>
 
@@ -30,31 +29,13 @@
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
       <td><%= course.status %></td>
       <td><%= link_to 'Show', course %></td>
-      <% if current_user.user_role == 'student' %>
-        <td><%= link_to 'Enroll', enroll_course_path(course), method: :post %></td>
-      <% end %>
-      <% if current_user.user_role == 'instructor' %>
-        <td><%= link_to "Students", all_students_course_path(course) %></td>
-      <% end %>
-      <% if current_user.user_role == 'admin' %>
-        <td><%= link_to 'Edit', edit_course_path(course) %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      <% end %>
+      <td><%= link_to 'Drop', drop_course_path(course), method: :post, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>
   </tbody>
 </table>
 
 <br>
-
-<!--<div id="courses">-->
-<%# @courses.each do |course| %>
-<%#= render course %>
-<!--    <p>-->
-<%#= link_to "Show this course", course %>
-<!--    </p>-->
-<%# end %>
-<!--</div>-->
 
 <% if current_user.user_role != 'student' %>
   <%= link_to "New course", new_course_path %>

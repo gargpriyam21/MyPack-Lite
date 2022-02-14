@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_12_102333) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
     t.string "password_digest"
@@ -40,14 +40,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_12_102333) do
     t.string "room"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "instructor_id", null: false
     t.index ["course_code"], name: "index_courses_on_course_code", unique: true
+    t.index ["instructor_id"], name: "index_courses_on_instructor_id"
   end
 
   create_table "enrollments", force: :cascade do |t|
-    t.string "student_id"
-    t.string "course_id"
+    t.string "student_code"
+    t.string "course_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "course_id", null: false
+    t.integer "student_id", null: false
+    t.integer "instructor_id", null: false
+    t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["instructor_id"], name: "index_enrollments_on_instructor_id"
+    t.index ["student_id"], name: "index_enrollments_on_student_id"
   end
 
   create_table "instructors", force: :cascade do |t|
@@ -94,6 +102,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_12_102333) do
   end
 
   add_foreign_key "admins", "users"
+  add_foreign_key "courses", "instructors"
+  add_foreign_key "enrollments", "courses"
+  add_foreign_key "enrollments", "instructors"
+  add_foreign_key "enrollments", "students"
   add_foreign_key "instructors", "users"
   add_foreign_key "students", "users"
 end
