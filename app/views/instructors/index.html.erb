@@ -20,7 +20,7 @@
         <td><%= instructor.email %></td>
         <td><%= instructor.department %></td>
         <td><%= link_to 'Show', instructor %></td>
-        <td><%= link_to "Edit this instructor", edit_instructor_path(instructor) %></td>
+        <td><%= link_to "Edit", edit_instructor_path(instructor) %></td>
         <td><%= link_to 'Destroy', instructor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
