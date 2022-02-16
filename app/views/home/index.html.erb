@@ -14,12 +14,12 @@
   <% elsif current_user.user_role == "admin" %>
     <%= link_to "All Instructors", instructors_path %> <br><br>
     <%= link_to "All Students", students_path %> <br><br>
-    <%= link_to "New Enrollment", new_enrollments_path %>
+    <%= link_to "New Enrollment", new_enrollment_path %>
   <% end %>
   <%= link_to "Logout", logout_path %><br><br>
 <% else %>
   <%= link_to "Login", login_path %><br><br>
-  <%= link_to "Student Signup", student_signup_path %> or <%= link_to "Instructor Signup", instructor_signup_path %><br>
+  <%= link_to "Student Signup", student_signup_path %> or <%= link_to "Instructor Signup", instructor_signup_path %> or <%= link_to "Admin Signup", admin_signup_path %><br>
   <br>
 
 <% end %>
