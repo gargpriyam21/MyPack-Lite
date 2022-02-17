@@ -85,6 +85,9 @@ class CoursesController < ApplicationController
     @course.students_enrolled = 0
     @course.students_waitlisted = 0
     @course.status = "OPEN"
+    if @course.weekday2 == "None"
+      @course.weekday2 = nil
+    end
     respond_to do |format|
       if @course.save
         format.html { redirect_to course_url(@course), notice: "Course was successfully created." }
@@ -195,9 +198,16 @@ class CoursesController < ApplicationController
     end
     @course.destroy
 
-    respond_to do |format|
-      format.html { redirect_to root_path, notice: "Course was successfully destroyed." }
-      format.json { head :no_content }
+    if @current_user.user_role == 'instructor'
+      respond_to do |format|
+        format.html { redirect_to instructor_courses_path, notice: "Course was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    elsif @current_user.user_role == 'admin'
+      respond_to do |format|
+        format.html { redirect_to root_path, notice: "Course was successfully destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -215,6 +225,6 @@ class CoursesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:name, :description, :instructor_name, :weekdays, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :status, :room)
+    params.require(:course).permit(:name, :description, :instructor_name, :weekday1,:weekday2, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :status, :room)
   end
 end

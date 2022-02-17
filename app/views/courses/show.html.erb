@@ -10,10 +10,14 @@
     <% else %>
       <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
     <% end %>
-  <% elsif current_user.user_role == 'admin' %>
+  <% elsif current_user.user_role == 'admin' or session[:user_id] == @course.instructor_id %>
     <%= link_to "Edit this course", edit_course_path(@course) %>
     <%= button_to "Destroy this course", @course, method: :delete %>
   <% end %>
+  <%# if session[:user_id] == @course.instructor_id %>
+    <%#= link_to "Back to my courses", instructor_courses_path %>
+  <%# end %>
+  <%= link_to "Back", :back %> <br><br>
+  <%= link_to "All Courses", courses_path %>
 
-  <%= link_to "Back to courses", courses_path %>
 </div>
