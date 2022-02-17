@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get 'logout', to: "sessions#destroy", as: 'logout'
   get 'instructor_courses', to: "courses#show_instructor_courses", as: "instructor_courses"
   get 'student_enrollments', to: "courses#show_student_enrolled_courses", as: "student_enrollments"
-  get 'show_instructor_students_enrolled',  to: "enrollments#show_instructor_students_enrolled", as: "show_instructor_students_enrolled"
+  get 'show_instructor_students_enrolled', to: "enrollments#show_instructor_students_enrolled", as: "show_instructor_students_enrolled"
 
   resources :courses do
     member do

@@ -7,6 +7,6 @@ class Course < ApplicationRecord
 
   # validates :waitlist_capacity ,presence: true
   validates :course_code, presence: true, uniqueness: true
-  validates :name,:description,:weekdays,:start_time,:end_time,:capacity,:room ,presence: true
+  validates :name, :description, :weekdays, :start_time, :end_time, :capacity, :room, presence: true
   # validates :end_time, comparison: { greater_than: :start_time }
 end

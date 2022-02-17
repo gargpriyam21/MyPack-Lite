@@ -1,5 +1,4 @@
 class AdminsController < ApplicationController
-  skip_before_action :authorized, only: [:new, :create]
   before_action :set_admin, only: %i[ show edit update destroy ]
   #Include Foreign Keys
   # GET /admins or /admins.json
@@ -80,13 +79,14 @@ class AdminsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_admin
-      @admin = Admin.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def admin_params
-      params.require(:admin).permit(:admin_id, :password, :name, :email, :phone_number)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_admin
+    @admin = Admin.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def admin_params
+    params.require(:admin).permit(:admin_id, :password, :name, :email, :phone_number)
+  end
 end

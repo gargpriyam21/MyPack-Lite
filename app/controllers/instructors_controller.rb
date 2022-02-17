@@ -1,5 +1,5 @@
 class InstructorsController < ApplicationController
-  # skip_before_action :authorized, only: [:new, :create]
+  skip_before_action :authorized, only: [:new, :create]
   before_action :set_instructor, only: %i[ show edit update destroy ]
 
   # GET /instructors or /instructors.json
@@ -19,7 +19,7 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/new
   def new
-    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
       redirect_to root_path
     end
     @instructor = Instructor.new
@@ -34,7 +34,7 @@ class InstructorsController < ApplicationController
 
   # POST /instructors or /instructors.json
   def create
-    if(!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
       redirect_to root_path
     end
     email = params[:instructor][:email]
@@ -61,7 +61,6 @@ class InstructorsController < ApplicationController
       end
     end
   end
-
 
   # PATCH/PUT /instructors/1 or /instructors/1.json
   def update
@@ -93,13 +92,14 @@ class InstructorsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_instructor
-      @instructor = Instructor.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def instructor_params
-      params.require(:instructor).permit(:instructor_id, :name, :email, :password, :department)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_instructor
+    @instructor = Instructor.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def instructor_params
+    params.require(:instructor).permit(:instructor_id, :name, :email, :password, :department)
+  end
 end

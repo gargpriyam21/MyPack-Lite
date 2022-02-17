@@ -26,6 +26,9 @@ class CoursesController < ApplicationController
   end
 
   def all_students
+    if !check_permissions?(session[:user_role], "show_all_student")
+      redirect_to root_path
+    end
     @course = Course.find_by_id(params[:id])
     puts @course.id
     @enrollments = Enrollment.where(course_id: @course.id)
@@ -135,7 +138,6 @@ class CoursesController < ApplicationController
     end
   end
 
-
   def drop
     if !check_permissions?(session[:user_role], "drop_course")
       redirect_to root_path
@@ -160,13 +162,28 @@ class CoursesController < ApplicationController
     if !check_permissions?(session[:user_role], "update_course")
       redirect_to root_path
     end
+
+    cant_update_course = course_params[:capacity].to_i < @course.students_enrolled
+
     respond_to do |format|
-      if @course.update(course_params)
-        format.html { redirect_to course_url(@course), notice: "Course was successfully updated." }
+      if cant_update_course
+        format.html { redirect_to edit_course_path(@course), alert: "There are more students enrolled than capacity" }
         format.json { render :show, status: :ok, location: @course }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
+        if @course.update(course_params)
+          format.html { redirect_to course_url(@course), notice: "Course was successfully updated." }
+
+          if @course.capacity > @course.students_enrolled
+            @course.update(status: 'OPEN')
+          elsif @course.capacity == @course.students_enrolled
+            @course.update(status: 'CLOSED')
+          end
+
+          format.json { render :show, status: :ok, location: @course }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @course.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
