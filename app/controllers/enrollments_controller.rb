@@ -47,6 +47,18 @@ class EnrollmentsController < ApplicationController
     @enrollment = Enrollment.new(enrollment_params)
     @course = Course.find_by_course_code(@enrollment.course_code)
     @student = Student.find_by_student_id(@enrollment.student_code)
+
+
+    if @student.nil?
+      flash[:alert] = "Student doesn't exist"
+      redirect_to new_enrollment_path
+      return
+    elsif @course.nil?
+      flash[:alert] = "Course doesn't exist"
+      redirect_to new_enrollment_path
+      return
+    end
+
     @instructor = Instructor.find_by_id(@course.instructor_id)
 
     puts @course.id
@@ -58,8 +70,8 @@ class EnrollmentsController < ApplicationController
 
     already_enrolled = !Enrollment.where(student_id: @student.id, course_id: @course.id)[0].nil?
 
-    if current_user.user_role == 'instructor'
-      respond_to do |format|
+    respond_to do |format|
+      if current_user.user_role == 'instructor' and session[:user_id] == @instructor.user_id
         if already_enrolled
           format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
@@ -81,6 +93,9 @@ class EnrollmentsController < ApplicationController
             end
           end
         end
+      else
+        format.html { redirect_to show_instructor_students_enrolled_path, alert: "You cannot enroll student in courses other than yours" }
+        format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       end
     elsif current_user.user_role == 'admin'
       respond_to do |format|

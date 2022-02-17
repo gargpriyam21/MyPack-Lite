@@ -5,5 +5,9 @@
 <br>
 
 <div>
-  <%= link_to "Back to instructors", instructors_path %>
+  <% if current_user %>
+    <%= link_to "Back to instructors", instructors_path %>
+  <% else %>
+
+  <% end %>
 </div>
