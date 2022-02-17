@@ -3,7 +3,7 @@
 
 <p>
   <strong> Code: </strong>
-  <%= @course.course_code   %>
+  <%= @course.course_code %>
 </p>
 
 <p>
@@ -23,18 +23,22 @@
 
 <p>
   <strong> Timings: </strong>
-  <%= @course.weekday1 + " " + @course.weekday2 +  " during " +  @course.start_time + " - " +  @course.end_time + " at " + @course.room%>
+  <% if !@course.weekday2.nil? %>
+    <%= @course.weekday1 + " " + @course.weekday2 + " during " + @course.start_time + " - " + @course.end_time + " at Room " + @course.room %>
+  <% else %>
+    <%= @course.weekday1 + " during " + @course.start_time + " - " + @course.end_time + " at " + @course.room %>
+  <% end %>
 </p>
 
 <p>
   <strong> Capacity: </strong>
-  <%= @course.capacity + "Students"%>
+  <%= @course.capacity.to_s + " Students" %>
 </p>
 
 
 <p>
   <strong> Status: </strong>
-  <%= @course.status%>
+  <%= @course.status %>
 </p>
 
 <div>

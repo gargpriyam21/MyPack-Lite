@@ -9,7 +9,8 @@
     <th>Course Code</th>
     <th>Name</th>
     <th>Instructor Name</th>
-    <th>Weekdays</th>
+    <th>Weekday1</th>
+    <th>Weekday2</th>
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
@@ -38,13 +39,10 @@
       <% if current_user.user_role == 'student' %>
         <td><%= link_to 'Enroll', enroll_course_path(course), method: :post %></td>
       <% end %>
-      <%# if current_user.user_role == 'student' and Enrollment.where(course_id: course.id,student_id: Student.find_by_user_id(current_user.id).id) != nil%>
-<!--        <td><%#= link_to 'Drop', drop_course_path(course), method: :post %></td>-->
-      <%# end %>
       <% if current_user.user_role == 'instructor' %>
         <td><%= link_to "Students", all_students_course_path(course) %></td>
       <% end %>
-      <% if current_user.user_role == 'admin' or session[:user_id] == course.instructor_id%>
+      <% if current_user.user_role == 'admin' or Instructor.find_by_user_id(session[:user_id]).id == course.instructor_id%>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
         <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% end %>
