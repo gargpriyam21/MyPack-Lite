@@ -1,7 +1,41 @@
 <p style="color: green"><%= notice %></p>
 <b><p style="color: red"><%= alert %></p></b>
 
-<%= render @course %>
+<p>
+  <strong> Code: </strong>
+  <%= @course.course_code   %>
+</p>
+
+<p>
+  <strong> Name: </strong>
+  <%= @course.name %>
+</p>
+
+<p>
+  <strong> Description: </strong>
+  <%= @course.name %>
+</p>
+
+<p>
+  <strong> Instructor: </strong>
+  <%= @course.instructor_name %>
+</p>
+
+<p>
+  <strong> Timings: </strong>
+  <%= @course.weekday1 + " " + @course.weekday2 +  " during " +  @course.start_time + " - " +  @course.end_time + " at " + @course.room%>
+</p>
+
+<p>
+  <strong> Capacity: </strong>
+  <%= @course.capacity + "Students"%>
+</p>
+
+
+<p>
+  <strong> Status: </strong>
+  <%= @course.status%>
+</p>
 
 <div>
   <% if current_user.user_role == 'student' %>
@@ -15,7 +49,7 @@
     <%= button_to "Destroy this course", @course, method: :delete %>
   <% end %>
   <%# if session[:user_id] == @course.instructor_id %>
-    <%#= link_to "Back to my courses", instructor_courses_path %>
+  <%#= link_to "Back to my courses", instructor_courses_path %>
   <%# end %>
   <%= link_to "Back", :back %> <br><br>
   <%= link_to "All Courses", courses_path %>
