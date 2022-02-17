@@ -26,7 +26,6 @@ class CoursesController < ApplicationController
   end
 
   def all_students
-    puts "Teri maa ka bhosda rails"
     @course = Course.find_by_id(params[:id])
     puts @course.id
     @enrollments = Enrollment.where(course_id: @course.id)
