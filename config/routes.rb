@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :courses
   resources :enrollments
   resources :sessions, only: [:new, :create, :destroy]
+  get 'admin_signup', to: "admins#new", as: 'admin_signup'
   get 'student_signup', to: "students#new", as: 'student_signup'
   get 'instructor_signup', to: "instructors#new", as: 'instructor_signup'
   get 'login', to: "sessions#new", as: 'login'

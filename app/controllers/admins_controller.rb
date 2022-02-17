@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: %i[ show edit update destroy ]
-  #Include Foreign Keys
+
   # GET /admins or /admins.json
   def index
     if !check_permissions?(session[:user_role], "view_admin")

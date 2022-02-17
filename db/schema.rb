@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_17_011119) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
     t.string "password_digest"
@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
     t.string "name"
     t.string "description"
     t.string "instructor_name"
-    t.string "weekdays"
+    t.string "weekday1"
     t.string "start_time"
     t.string "end_time"
     t.string "course_code"
@@ -41,6 +41,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "instructor_id", null: false
+    t.string "weekday2"
     t.index ["course_code"], name: "index_courses_on_course_code", unique: true
     t.index ["instructor_id"], name: "index_courses_on_instructor_id"
   end
@@ -76,7 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_13_054444) do
     t.string "student_id"
     t.string "email"
     t.string "password_digest"
-    t.datetime "date_of_birth"
+    t.date "date_of_birth"
     t.string "phone_number"
     t.string "major"
     t.datetime "created_at", null: false

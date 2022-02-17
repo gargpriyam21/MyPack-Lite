@@ -1,6 +1,24 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @instructor %>
+<p>
+  <strong>Instructor ID:</strong>
+  <%= @instructor.instructor_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @instructor.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @instructor.email %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @instructor.department %>
+</p>
 
 <div>
   <%= link_to "Edit this instructor", edit_instructor_path(@instructor) %> |

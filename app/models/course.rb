@@ -1,3 +1,5 @@
+require 'date'
+
 class Course < ApplicationRecord
   has_one :instructor
   has_many :enrollments, dependent: :destroy
@@ -5,8 +7,26 @@ class Course < ApplicationRecord
   belongs_to :student, optional: true
   belongs_to :instructor
 
+
   # validates :waitlist_capacity ,presence: true
   validates :course_code, presence: true, uniqueness: true
-  validates :name, :description, :weekdays, :start_time, :end_time, :capacity, :room, presence: true
-  # validates :end_time, comparison: { greater_than: :start_time }
+  # validates :weekday2, presence: false
+  validates :name, :description, :weekday1, :start_time, :end_time, :capacity, :room, presence: true
+  validates :weekday2,allow_blank: true, comparison: { other_than: :weekday1 }, presence: false
+  validates :start_time,:end_time, format: {
+    with: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+    message: "Invalid Time format",
+    multiline: true
+  }
+
+  validates :course_code, format: {
+    with: /^[A-Za-z]{0,3}[0-9]{3}$/,
+    message: "Invalid Course Code",
+    multiline: true
+  }
+
+
+
+
+  # validates DateTime.strptime(:end_time.to_s,'%H:%M'), comparison: {greater_than: DateTime.strptime(:start_time.to_s,'%H:%M')}
 end

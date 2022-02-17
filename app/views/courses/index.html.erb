@@ -9,7 +9,8 @@
     <th>Course Code</th>
     <th>Name</th>
     <th>Instructor Name</th>
-    <th>Weekdays</th>
+    <th>Weekday1</th>
+    <th>Weekday2</th>
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
@@ -24,7 +25,12 @@
       <td><%= course.course_code %></td>
       <td><%= course.name %></td>
       <td><%= course.instructor_name %></td>
-      <td><%= course.weekdays %></td>
+      <td><%= course.weekday1 %></td>
+      <% if course.weekday2.nil? %>
+        <td><%= "None" %></td>
+      <% else %>
+        <td><%= course.weekday2 %></td>
+      <% end %>
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
@@ -36,7 +42,7 @@
       <% if current_user.user_role == 'instructor' %>
         <td><%= link_to "Students", all_students_course_path(course) %></td>
       <% end %>
-      <% if current_user.user_role == 'admin' %>
+      <% if current_user.user_role == 'admin' or Instructor.find_by_user_id(session[:user_id]).id == course.instructor_id%>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
         <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% end %>
@@ -47,16 +53,6 @@
 
 <br>
 
-<!--<div id="courses">-->
-<%# @courses.each do |course| %>
-<%#= render course %>
-<!--    <p>-->
-<%#= link_to "Show this course", course %>
-<!--    </p>-->
-<%# end %>
-<!--</div>-->
-
 <% if current_user.user_role != 'student' %>
   <%= link_to "New course", new_course_path %>
 <% end %>
-<%#= link_to 'Back', root_path %>

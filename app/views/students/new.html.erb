@@ -4,6 +4,8 @@
 
 <br>
 
-<div>
+<% if current_user %>
   <%= link_to "Back to students", students_path %>
-</div>
+<% else %>
+
+<% end %>

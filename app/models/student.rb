@@ -4,9 +4,8 @@ class Student < ApplicationRecord
   has_many :courses
   has_many :enrollments, dependent: :destroy
 
-  validates :name, :password_digest, :date_of_birth, :phone_number, :major, presence: true
-
   validates :email, :student_id, presence: true, uniqueness: true
+  validates :name, :password_digest, :date_of_birth, :phone_number, :major, presence: true
 
   validates :phone_number, format: {
     with: /\A(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\z/,
