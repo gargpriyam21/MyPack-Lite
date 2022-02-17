@@ -1,9 +1,9 @@
 <h1>New course</h1>
 
-<%= render "form", course: @course %>
+<%= render "form", course: @course, instructor: @instructor %>
 
 <br>
 
 <div>
-  <%= link_to "Back to courses", courses_path %>
+  <%= link_to "Back to courses", instructor_courses_path %>
 </div>

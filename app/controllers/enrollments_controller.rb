@@ -47,6 +47,17 @@ class EnrollmentsController < ApplicationController
     @enrollment = Enrollment.new(enrollment_params)
     @course = Course.find_by_course_code(@enrollment.course_code)
     @student = Student.find_by_student_id(@enrollment.student_code)
+
+    if @student.nil?
+      flash[:alert] = "Student doesn't exist"
+      redirect_to new_enrollment_path
+      return
+    elsif @course.nil?
+      flash[:alert] = "Course doesn't exist"
+      redirect_to new_enrollment_path
+      return
+    end
+
     @instructor = Instructor.find_by_id(@course.instructor_id)
 
     @enrollment.student_id = @student.id
@@ -57,16 +68,45 @@ class EnrollmentsController < ApplicationController
 
     if current_user.user_role == 'instructor'
       respond_to do |format|
+        if current_user.user_role == 'instructor' and session[:user_id] == @instructor.user_id
+          if already_enrolled
+            format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
+            format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+          else
+            if @course.status == 'CLOSED'
+              format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
+              format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+            else
+              if @enrollment.save
+                format.html { redirect_to show_instructor_students_enrolled_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
+                format.json { render :show, status: :created, location: @enrollment }
+                @course.update(students_enrolled: (@course.students_enrolled + 1))
+                if @course.capacity == @course.students_enrolled
+                  @course.update(status: "CLOSED")
+                end
+              else
+                format.html { render :new, status: :unprocessable_entity }
+                format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+              end
+            end
+          end
+        else
+          format.html { redirect_to show_instructor_students_enrolled_path, alert: "You cannot enroll student in courses other than yours" }
+          format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+        end
+      end
+    elsif current_user.user_role == "admin"
+      respond_to do |format|
         if already_enrolled
-          format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
+          format.html { redirect_to admins_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
         else
           if @course.status == 'CLOSED'
-            format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
+            format.html { redirect_to admins_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
             format.json { render json: @enrollment.errors, status: :unprocessable_entity }
           else
             if @enrollment.save
-              format.html { redirect_to show_instructor_students_enrolled_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
+              format.html { redirect_to admins_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
               format.json { render :show, status: :created, location: @enrollment }
               @course.update(students_enrolled: (@course.students_enrolled + 1))
               if @course.capacity == @course.students_enrolled
@@ -80,7 +120,6 @@ class EnrollmentsController < ApplicationController
         end
       end
     end
-
   end
 
   # PATCH/PUT /enrollments/1 or /enrollments/1.json
