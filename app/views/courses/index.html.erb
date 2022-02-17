@@ -53,15 +53,6 @@
 
 <br>
 
-<!--<div id="courses">-->
-<%# @courses.each do |course| %>
-<%#= render course %>
-<!--    <p>-->
-<%#= link_to "Show this course", course %>
-<!--    </p>-->
-<%# end %>
-<!--</div>-->
-
 <% if current_user.user_role != 'student' %>
   <%= link_to "New course", new_course_path %>
 <% end %>
