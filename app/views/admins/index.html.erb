@@ -6,9 +6,10 @@
   <% @admins.each do |admin| %>
     <%= render admin %>
     <p>
-      <%= link_to "Show this admin", admin %>
+      <%#= link_to "Show this admin", admin %>
+      <%= link_to "Edit this admin", edit_admin_path(admin) %>
     </p>
   <% end %>
 </div>
 
-<%= link_to "New admin", new_admin_path %>
+<%#= link_to "New admin", new_admin_path %>
