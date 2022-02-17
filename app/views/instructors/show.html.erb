@@ -5,6 +5,7 @@
 <div>
   <%= link_to "Edit this instructor", edit_instructor_path(@instructor) %> |
   <%= link_to "Back to instructors", instructors_path %>
+  <%= link_to "Create Course", new_course_path(@insturctor) %>
 
   <%= button_to "Destroy this instructor", @instructor, method: :delete %>
 </div>

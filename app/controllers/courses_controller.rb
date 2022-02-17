@@ -73,12 +73,23 @@ class CoursesController < ApplicationController
     if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
-    @course = Course.new(course_params)
-    @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
-    @course.instructor_name = Instructor.find_by_user_id(session[:user_id]).name
-    @course.students_enrolled = 0
-    @course.students_waitlisted = 0
-    @course.status = "OPEN"
+    puts "Instructor"
+    puts @instructor
+    if session[:user_role] == 'admin'
+      @course = Course.new(course_params)
+      @course.instructor_id = params[:instructor_id]
+      @course.instructor_name = Instructor.where(params[:instructor_id]).name
+      @course.students_enrolled = 0
+      @course.students_waitlisted = 0
+      @course.status = "OPEN"
+    else
+      @course = Course.new(course_params)
+      @course.instructor_id = Instructor.find_by_user_id(session[:user_id]).id
+      @course.instructor_name = Instructor.find_by_user_id(session[:user_id]).name
+      @course.students_enrolled = 0
+      @course.students_waitlisted = 0
+      @course.status = "OPEN"
+    end
     respond_to do |format|
       if @course.save
         format.html { redirect_to course_url(@course), notice: "Course was successfully created." }
@@ -210,6 +221,6 @@ class CoursesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:name, :description, :instructor_name, :weekdays, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :status, :room)
+    params.require(:course).permit(:instructor_id, :name, :description, :instructor_name, :weekdays, :start_time, :end_time, :course_code, :capacity, :waitlist_capacity, :students_enrolled, :status, :room)
   end
 end
