@@ -24,7 +24,12 @@
       <td><%= course.course_code %></td>
       <td><%= course.name %></td>
       <td><%= course.instructor_name %></td>
-      <td><%= course.weekdays %></td>
+      <td><%= course.weekday1 %></td>
+      <% if course.weekday2.nil? %>
+        <td><%= "None" %></td>
+      <% else %>
+        <td><%= course.weekday2 %></td>
+      <% end %>
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
@@ -33,10 +38,13 @@
       <% if current_user.user_role == 'student' %>
         <td><%= link_to 'Enroll', enroll_course_path(course), method: :post %></td>
       <% end %>
+      <%# if current_user.user_role == 'student' and Enrollment.where(course_id: course.id,student_id: Student.find_by_user_id(current_user.id).id) != nil%>
+<!--        <td><%#= link_to 'Drop', drop_course_path(course), method: :post %></td>-->
+      <%# end %>
       <% if current_user.user_role == 'instructor' %>
         <td><%= link_to "Students", all_students_course_path(course) %></td>
       <% end %>
-      <% if current_user.user_role == 'admin' %>
+      <% if current_user.user_role == 'admin' or session[:user_id] == course.instructor_id%>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
         <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% end %>
@@ -57,6 +65,8 @@
 <!--</div>-->
 
 <% if current_user.user_role != 'student' %>
-  <%= link_to "New course", new_course_path %>
+  <%= link_to "New course", new_course_path %> <br><br>
 <% end %>
+<%= link_to "Back", :back %> <br><br>
+<%= link_to "All Courses", courses_path %>
 <%#= link_to 'Back', root_path %>

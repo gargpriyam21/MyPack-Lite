@@ -22,18 +22,25 @@
   </div>
 
   <div>
-    <%= form.label :weekdays, style: "display: block" %>
-    <%= form.text_field :weekdays %>
+    <%= form.label :weekday1, style: "display: block" %>
+    <%#= form.text_field :weekday1 %>
+    <%= form.select :weekday1,['MON','TUE','WED','THU','FRI'] %>
+  </div>
+
+  <div>
+    <%= form.label :weekday2, style: "display: block" %>
+    <%#= form.text_field :weekday1 %>
+    <%= form.select :weekday2,['MON','TUE','WED','THU','None'] %>
   </div>
 
   <div>
     <%= form.label :start_time, style: "display: block" %>
-    <%= form.text_field :start_time %>
+    <%= form.text_field :start_time , placeholder: "HH:MM"%>
   </div>
 
   <div>
     <%= form.label :end_time, style: "display: block" %>
-    <%= form.text_field :end_time %>
+    <%= form.text_field :end_time , placeholder: "HH:MM"%>
   </div>
 
   <div>
