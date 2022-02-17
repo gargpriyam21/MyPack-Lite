@@ -1,42 +1,41 @@
 class UsersController < ApplicationController
-  skip_before_action :authorized, only: [:index,:show,:destroy]
   before_action :set_user, only: %i[ show edit update destroy ]
 
   # GET /users or /users.json
   def index
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
     @users = User.all
   end
 
   # GET /users/1 or /users/1.json
   def show
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
   end
 
   # GET /users/new
   def new
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
     @user = User.new
   end
 
   # GET /users/1/edit
   def edit
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
   end
 
   # POST /users or /users.json
   def create
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
     # @user = User.new(user_params)
     #
     # respond_to do |format|
@@ -52,9 +51,9 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1 or /users/1.json
   def update
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to user_url(@user), notice: "User was successfully updated." }
@@ -68,9 +67,9 @@ class UsersController < ApplicationController
 
   # DELETE /users/1 or /users/1.json
   def destroy
-    # if(!current_user.nil? && !check_permissions?(session[:user_role], "user"))
-    #   redirect_to root_path
-    # end
+    if (!current_user.nil? && !check_permissions?(session[:user_role], "user"))
+      redirect_to root_path
+    end
     @user.destroy
 
     respond_to do |format|
@@ -80,13 +79,14 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:email, :user_role)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.require(:user).permit(:email, :user_role)
+  end
 end
