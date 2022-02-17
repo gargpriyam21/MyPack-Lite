@@ -1,15 +1,24 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Admins</h1>
+<h1>Profile</h1>
 
-<div id="admins">
+<div>
   <% @admins.each do |admin| %>
-    <%= render admin %>
     <p>
-      <%#= link_to "Show this admin", admin %>
-      <%= link_to "Edit this admin", edit_admin_path(admin) %>
+      <strong>Name:</strong>
+      <%= admin.name %>
     </p>
+
+    <p>
+      <strong>Email:</strong>
+      <%= admin.email %>
+    </p>
+
+    <p>
+      <strong>Phone Number:</strong>
+      <%= admin.phone_number %>
+    </p>
+
+    <%= link_to "Edit this admin", edit_admin_path(admin) %>
   <% end %>
 </div>
-
-<%#= link_to "New admin", new_admin_path %>

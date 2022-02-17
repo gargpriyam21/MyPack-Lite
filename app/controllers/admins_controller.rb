@@ -1,7 +1,6 @@
 class AdminsController < ApplicationController
-  skip_before_action :authorized, only: [:new, :create]
-  # before_action :set_admin, only: %i[ show edit update destroy ]
-  #Include Foreign Keys
+  before_action :set_admin, only: %i[ show edit update destroy ]
+
   # GET /admins or /admins.json
   def index
     if !check_permissions?(session[:user_role], "view_admin")
@@ -19,9 +18,9 @@ class AdminsController < ApplicationController
 
   # GET /admins/new
   def new
-    # if !check_permissions?(session[:user_role], "create_admin")
-    #   redirect_to root_path
-    # end
+    if !check_permissions?(session[:user_role], "create_admin")
+      redirect_to root_path
+    end
     @admin = Admin.new
   end
 
@@ -34,30 +33,18 @@ class AdminsController < ApplicationController
 
   # POST /admins or /admins.json
   def create
-    # if !check_permissions?(session[:user_role], "create_admin")
-    #   redirect_to root_path
-    # end
-    email = params[:admin][:email]
-    user = { :email => email, :user_role => 'admin' }
-    @instructor = nil
-    @user = User.new(user)
+    if !check_permissions?(session[:user_role], "create_admin")
+      redirect_to root_path
+    end
+    @admin = Admin.new(admin_params)
 
     respond_to do |format|
-      if @user.save
-        @admin = Admin.new(admin_params)
-        @admin.user_id = @user.id
-        if @admin.save
-          if (not current_user.nil? and current_user.user_role == "admin")
-            format.html { redirect_to @admin, notice: "Admin was successfully created." }
-            format.json { render :show, status: :created, location: @admin }
-          else
-            format.html { redirect_to login_path, notice: "Admin was successfully created." }
-            format.json { render :show, status: :created, location: @admin }
-          end
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @admin.errors, status: :unprocessable_entity }
-        end
+      if @admin.save
+        format.html { redirect_to admin_url(@admin), notice: "Admin was successfully created." }
+        format.json { render :show, status: :created, location: @admin }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @admin.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -100,6 +87,6 @@ class AdminsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def admin_params
-    params.require(:admin).permit(:id, :admin_id, :password, :name, :email, :phone_number)
+    params.require(:admin).permit(:admin_id, :password, :name, :email, :phone_number)
   end
 end

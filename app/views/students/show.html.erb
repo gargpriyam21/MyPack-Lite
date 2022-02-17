@@ -1,6 +1,34 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @student %>
+<p>
+  <strong>Student ID:</strong>
+  <%= @student.student_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @student.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @student.email %>
+</p>
+
+<p>
+  <strong>Date of Birth:</strong>
+  <%= @student.date_of_birth %>
+</p>
+
+<p>
+  <strong>Phone Number:</strong>
+  <%= @student.phone_number %>
+</p>
+
+<p>
+  <strong>Major:</strong>
+  <%= @student.major %>
+</p>
 
 <div>
   <%= link_to "Edit this student", edit_student_path(@student) %> |

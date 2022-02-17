@@ -1,11 +1,28 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @instructor %>
+<p>
+  <strong>Instructor ID:</strong>
+  <%= @instructor.instructor_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @instructor.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @instructor.email %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @instructor.department %>
+</p>
 
 <div>
   <%= link_to "Edit this instructor", edit_instructor_path(@instructor) %> |
   <%= link_to "Back to instructors", instructors_path %>
-  <%= link_to "Create Course", new_course_path(@insturctor) %>
 
   <%= button_to "Destroy this instructor", @instructor, method: :delete %>
 </div>

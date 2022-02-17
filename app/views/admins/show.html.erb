@@ -1,10 +1,20 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @admin %>
+<p>
+  <strong>Name:</strong>
+  <%= @admin.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @admin.email %>
+</p>
+
+<p>
+  <strong>Phone Number:</strong>
+  <%= @admin.phone_number %>
+</p>
 
 <div>
-  <%= link_to "Edit this admin", edit_admin_path %> |
-  <%= link_to "Back to admins", admins_path %>
-
-  <%= button_to "Destroy this admin", @admin, method: :delete %>
+  <%= link_to "Edit this admin", edit_admin_path %>
 </div>
