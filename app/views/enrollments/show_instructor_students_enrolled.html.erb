@@ -1,7 +1,7 @@
 <p style="color: green"><%= notice %></p>
 <b><p style="color: red"><%= alert %></p></b>
 
-<h1>My Students</h1>
+<h1>My Course Students</h1>
 
 <table>
   <thead>
@@ -41,5 +41,6 @@
 
 <%# if current_user.user_role != 'student' %>
 <%= link_to "New Enrollment", new_enrollment_path %>
+<%= link_to "New Waitlist", new_waitlist_path %>
 <%# end %>
 <%#= link_to 'Back', root_path %>

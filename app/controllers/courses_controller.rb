@@ -119,21 +119,54 @@ class CoursesController < ApplicationController
     @student = Student.find_by_user_id(session[:user_id])
     @instructor = Instructor.find_by_id(@course.instructor_id)
 
-    @enrollment = Enrollment.new
-    @enrollment.student_code = @student.student_id
-    @enrollment.course_code = @course.course_code
-    @enrollment.student_id = @student.id
-    @enrollment.course_id = @course.id
-    @enrollment.instructor_id = @instructor.id
+    if @course.status == 'WAITLISTED'
+      @waitlist = Enrollment.new
+      @waitlist.student_code = @student.student_id
+      @waitlist.course_code = @course.course_code
+      @waitlist.student_id = @student.id
+      @waitlist.course_id = @course.id
+      @waitlist.instructor_id = @instructor.id
 
+
+    else
+
+      @enrollment = Enrollment.new
+      @enrollment.student_code = @student.student_id
+      @enrollment.course_code = @course.course_code
+      @enrollment.student_id = @student.id
+      @enrollment.course_id = @course.id
+      @enrollment.instructor_id = @instructor.id
+    end
     already_enrolled = !Enrollment.where(student_id: @student.id, course_id: @course.id)[0].nil?
-
+    already_waitlisted = !Waitlist.where(student_id: @student.id, course_id: @course.id)[0].nil?
     respond_to do |format|
       if already_enrolled
         format.html { redirect_to courses_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
         format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       else
-        if @course.status == 'CLOSED'
+        if @course.status == 'WAITLISTED'
+          if already_waitlisted
+            format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
+            format.json { render json: @waitlist.errors, status: :unprocessable_entity }
+          else
+            if @course.students_waitlisted < @course.waitlist_capacity
+              if @waitlist.save
+                format.html { redirect_to courses_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
+                format.json { render :show, status: :created, location: @enrollment }
+                @course.update(students_waitlisted: (@course.students_waitlisted + 1))
+                if @course.waitlist_capacity == @course.students_waitlisted
+                  @course.update(status: "CLOSED")
+                end
+              else
+                format.html { render :new, status: :unprocessable_entity }
+                format.json { render json: @waitlist.errors, status: :unprocessable_entity }
+              end
+            else
+              format.html { redirect_to courses_path,alert: "Waitlist capacity is full" }
+              format.json { render json: @waitlist.errors, status: :unprocessable_entity }
+            end
+          end
+        elsif @course.status == 'CLOSED'
           format.html { redirect_to courses_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
         else
@@ -237,6 +270,6 @@ class CoursesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:name, :description, :instructor_name, :weekday1,:weekday2, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :status, :room)
+    params.require(:course).permit(:name, :description, :instructor_name, :weekday1,:weekday2, :start_time, :end_time, :course_code, :capacity, :students_enrolled,:waitlist_capacity,:students_enrolled, :status, :room)
   end
 end
