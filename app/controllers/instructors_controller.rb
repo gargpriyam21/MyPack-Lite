@@ -18,7 +18,7 @@ class InstructorsController < ApplicationController
     @instructor = Instructor.find params[:id]
     unless session[:email] == @instructor.email or session[:email] == 'admin@ncsu.edu'
       flash[:notice] = "You don't have access to this"
-      redirect_to instructors_path
+      # redirect_to root_path
       return
     end
   end
