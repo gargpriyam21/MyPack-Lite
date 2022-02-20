@@ -48,7 +48,7 @@
     <% else %>
       <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
     <% end %>
-  <% elsif current_user.user_role == 'admin' or session[:user_id] == @course.instructor_id %>
+  <% elsif current_user.user_role == 'admin' or ( current_user.user_role == 'instructor' and Instructor.find_by_user_id(session[:user_id]).id == @course.instructor_id) %>
     <%= link_to "Edit this course", edit_course_path(@course) %>
     <%= button_to "Destroy this course", @course, method: :delete %>
   <% end %>
