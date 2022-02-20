@@ -15,6 +15,12 @@ class InstructorsController < ApplicationController
     if !check_permissions?(session[:user_role], "show_instructor")
       redirect_to root_path
     end
+    @instructor = Instructor.find params[:id]
+    unless session[:email] == @instructor.email or session[:email] == 'admin@ncsu.edu'
+      flash[:notice] = "You don't have access to this"
+      redirect_to instructors_path
+      return
+    end
   end
 
   # GET /instructors/new
