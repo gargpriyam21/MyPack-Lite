@@ -1,6 +1,7 @@
 class StudentsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
   before_action :set_student, only: %i[ show edit update destroy ]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
   # GET /students or /students.json
   def index
@@ -12,9 +13,9 @@ class StudentsController < ApplicationController
 
   # GET /students/1 or /students/1.json
   def show
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "show_student"))
-      redirect_to root_path
-    end
+    # if (!current_user.nil? && !check_permissions?(session[:user_role], "show_student"))
+    #   redirect_to root_path
+    # end
   end
 
   # GET /students/new
@@ -28,6 +29,13 @@ class StudentsController < ApplicationController
   # GET /students/1/edit
   def edit
     if (!current_user.nil? && !check_permissions?(session[:user_role], "edit_student"))
+      redirect_to root_path
+    end
+  end
+
+  def correct_user
+    @student = Student.find_by_id(params[:id])
+    if !current_user.nil? && @student.user_id != current_user.id
       redirect_to root_path
     end
   end
