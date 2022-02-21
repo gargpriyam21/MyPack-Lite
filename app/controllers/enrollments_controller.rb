@@ -212,7 +212,6 @@ class EnrollmentsController < ApplicationController
 
     @enrollment = Enrollment.find_by_id(params[:id])
     dest_enroll_and_wait
-
   end
 
   # DELETE /enrollments/1 or /enrollments/1.json

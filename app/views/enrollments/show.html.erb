@@ -1,8 +1,7 @@
 <%= render @enrollment %>
 
 <div>
-  <%= link_to "Edit this enrollment", edit_enrollment_path(@enrollment) %> |
+  <%= link_to "Edit this enrollment", edit_enrollment_path(@enrollment) %> <br><br>
+  <%= button_to "Destroy this enrollment", @enrollment, method: :delete %><br>
   <%= link_to "Back to enrollments", enrollments_path %>
-
-  <%= button_to "Destroy this enrollment", @enrollment, method: :delete %>
 </div>
