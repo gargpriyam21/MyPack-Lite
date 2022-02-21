@@ -32,8 +32,8 @@ class Course < ApplicationRecord
   end
 
   def weekday1_and_weekday2
-    weekday_hash = { "MON" => 1, "TUE" => 2, "WED" => 3, "THU" => 4, "FRI" => 5, nil => 6 }
-    if weekday1 == 'FRI' and !weekday2.nil?
+    weekday_hash = { "MON" => 1, "TUE" => 2, "WED" => 3, "THU" => 4, "FRI" => 5, nil => 6, '' => 6, ' ' => 6 }
+    if weekday1 == 'FRI' and !weekday2.blank?
       errors.add(:weekday2, "must be blank if Weekday 1 is FRI")
     elsif weekday_hash[weekday1.to_s] > weekday_hash[weekday2]
       errors.add(:weekday2, "must be before than weekday1")

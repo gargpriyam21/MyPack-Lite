@@ -34,7 +34,7 @@ class CoursesController < ApplicationController
 
   def correct_user
     @course = Course.find_by_id(params[:id])
-    if current_user.user_role != 'admin'
+    if current_user.user_role == 'instructor'
       if !current_user.nil? && Instructor.find_by_id(@course.instructor_id).user_id != current_user.id
         redirect_to root_path
       end
@@ -252,26 +252,17 @@ class CoursesController < ApplicationController
     end
 
     cant_update_course = course_params[:capacity].to_i < @course.students_enrolled
+    cant_update_course_wait = course_params[:waitlist_capacity].to_i < @course.students_waitlisted
 
     respond_to do |format|
       if cant_update_course
         format.html { redirect_to edit_course_path(@course), alert: "There are more students enrolled than capacity" }
         format.json { render :show, status: :ok, location: @course }
+      elsif cant_update_course_wait
+        format.html { redirect_to edit_course_path(@course), alert: "There are more students waitlisted than waitlist capacity" }
+        format.json { render :show, status: :ok, location: @course }
       else
-        if @course.update(course_params)
-          format.html { redirect_to course_url(@course), notice: "Course was successfully updated." }
-
-          if @course.capacity > @course.students_enrolled
-            @course.update(status: 'OPEN')
-          elsif @course.capacity == @course.students_enrolled
-            @course.update(status: 'CLOSED')
-          end
-
-          format.json { render :show, status: :ok, location: @course }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @course.errors, status: :unprocessable_entity }
-        end
+        fill_and_update_enrollmets(format)
       end
     end
   end
@@ -297,6 +288,48 @@ class CoursesController < ApplicationController
   end
 
   private
+
+  def fill_and_update_enrollmets(format)
+    @waitlists = Waitlist.where(course_id: @course.id)
+    if !@waitlists.nil? and @course.capacity > @course.students_enrolled
+      @waitlists.each do |waitlist|
+        @enrollment = Enrollment.new
+        @enrollment.student_code = waitlist.student_code
+        @enrollment.course_code = waitlist.course_code
+        @enrollment.course_id = waitlist.course_id
+        @enrollment.student_id = waitlist.student_id
+        @enrollment.instructor_id = waitlist.instructor_id
+        if @enrollment.save
+          @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+          @course.update(students_enrolled: (@course.students_enrolled + 1))
+          if @course.capacity == @course.students_enrolled
+            break
+          end
+          waitlist.destroy
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    if @course.update(course_params)
+      if @course.capacity > @course.students_enrolled
+        @course.update(status: 'OPEN')
+      elsif @course.capacity == @course.students_enrolled
+        if @course.waitlist_capacity > @course.students_waitlisted
+          @course.update(status: 'WAITLIST')
+        else
+          @course.update(status: 'CLOSED')
+        end
+      end
+      format.html { redirect_to course_url(@course), notice: "Course was successfully updated." }
+      format.json { render :show, status: :ok, location: @course }
+    else
+      format.html { render :edit, status: :unprocessable_entity }
+      format.json { render json: @course.errors, status: :unprocessable_entity }
+    end
+  end
 
   def shift_wait_to_enroll
     @enrollment = Enrollment.new
