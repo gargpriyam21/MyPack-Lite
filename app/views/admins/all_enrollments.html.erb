@@ -8,8 +8,8 @@
     <th>Course Code</th>
     <th>Course Name</th>
     <th>Instructor</th>
-    <th>Status</th>
     <th>Major</th>
+    <th>Status</th>
     <th colspan="1"></th>
   </tr>
   </thead>
@@ -22,8 +22,8 @@
       <td><%= enrollment.course_code %></td>
       <td><%= Course.find_by_course_code(enrollment.course_code).name %></td>
       <td><%= Course.find_by_course_code(enrollment.course_code).instructor_name %></td>
-      <td>Enrolled</td>
       <td><%= Student.find_by_student_id(enrollment.student_code).major %></td>
+      <td>Enrolled</td>
       <td> <%= link_to "Show this enrollment", enrollment %></td>
     </tr>
   <% end %>
@@ -42,8 +42,8 @@
     <th>Course Code</th>
     <th>Course Name</th>
     <th>Instructor</th>
-    <th>Status</th>
     <th>Major</th>
+    <th>Status</th>
     <th colspan="1"></th>
   </tr>
   </thead>
@@ -56,8 +56,8 @@
       <td><%= waitlist.course_code %></td>
       <td><%= Course.find_by_course_code(waitlist.course_code).name %></td>
       <td><%= Course.find_by_course_code(waitlist.course_code).instructor_name %></td>
-      <td>Waitlisted</td>
       <td><%= Student.find_by_student_id(waitlist.student_code).major %></td>
+      <td>Waitlisted</td>
       <td> <%= link_to "Show this waitlist", waitlist %></td>
     </tr>
   <% end %>

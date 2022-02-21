@@ -1,8 +1,7 @@
 <%= render @waitlist %>
 
 <div>
-  <%= link_to "Edit this waitlist", edit_waitlist_path(@waitlist) %> |
+  <%= link_to "Edit this waitlist", edit_waitlist_path(@waitlist) %> <br><br>
+  <%= button_to "Destroy this waitlist", @waitlist, method: :delete %><br>
   <%= link_to "Back to waitlists", waitlists_path %>
-
-  <%= button_to "Destroy this waitlist", @waitlist, method: :delete %>
 </div>

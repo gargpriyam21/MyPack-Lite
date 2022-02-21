@@ -19,8 +19,7 @@
 </p>
 
 <div>
-  <%= link_to "Edit this instructor", edit_instructor_path(@instructor) %> |
+  <%= link_to "Edit this instructor", edit_instructor_path(@instructor) %> <br><br>
+  <%= button_to "Destroy this instructor", @instructor, method: :delete %><br>
   <%= link_to "Back to instructors", instructors_path %>
-
-  <%= button_to "Destroy this instructor", @instructor, method: :delete %>
 </div>
