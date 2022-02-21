@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_17_011119) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_19_215100) do
   create_table "admins", force: :cascade do |t|
     t.string "admin_id"
     t.string "password_digest"
@@ -96,10 +96,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_17_011119) do
   end
 
   create_table "waitlists", force: :cascade do |t|
-    t.string "student_id"
-    t.string "course_id"
+    t.string "student_code"
+    t.string "course_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "course_id", null: false
+    t.integer "student_id", null: false
+    t.integer "instructor_id", null: false
+    t.index ["course_id"], name: "index_waitlists_on_course_id"
+    t.index ["instructor_id"], name: "index_waitlists_on_instructor_id"
+    t.index ["student_id"], name: "index_waitlists_on_student_id"
   end
 
   add_foreign_key "admins", "users"
@@ -109,4 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_17_011119) do
   add_foreign_key "enrollments", "students"
   add_foreign_key "instructors", "users"
   add_foreign_key "students", "users"
+  add_foreign_key "waitlists", "courses"
+  add_foreign_key "waitlists", "instructors"
+  add_foreign_key "waitlists", "students"
 end

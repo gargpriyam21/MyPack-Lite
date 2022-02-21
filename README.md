@@ -1,5 +1,7 @@
 # MyPack Lite: Student Enrollment System
 
+**Please update on this email if application is not running on VCL: pgarg6@ncsu.edu**
+
 ## Link to the deployed application
 http://152.7.98.85:8080/
 
