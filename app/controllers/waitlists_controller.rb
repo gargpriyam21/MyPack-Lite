@@ -82,7 +82,7 @@ class WaitlistsController < ApplicationController
           else
             if @course.status != 'CLOSED'
               if already_waitlisted
-                format.html {redirect_to show_instructor_students_waitlisted_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s}
+                format.html { redirect_to show_instructor_students_waitlisted_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 #render show_instructor_students_waitlisted_path
               else
@@ -101,7 +101,7 @@ class WaitlistsController < ApplicationController
                     format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                   end
                 else
-                  format.html { redirect_to show_instructor_students_waitlisted_path,alert: "Waitlist capacity is full" }
+                  format.html { redirect_to show_instructor_students_waitlisted_path, alert: "Waitlist capacity is full" }
                   format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 end
               end
@@ -139,7 +139,7 @@ class WaitlistsController < ApplicationController
                   format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 end
               else
-                format.html { redirect_to admins,alert: "Waitlist capacity is full" }
+                format.html { redirect_to admins, alert: "Waitlist capacity is full" }
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
               end
             end
@@ -175,7 +175,6 @@ class WaitlistsController < ApplicationController
     @waitlist.destroy
     @course = Course.find_by_id(@waitlist.course_id)
     @student = Student.find_by_id(@waitlist.student_id)
-
 
     respond_to do |format|
       format.html { redirect_to show_instructor_students_waitlisted_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }

@@ -10,10 +10,12 @@
   </thead>
   <tbody>
   <% @waitlists.each do |waitlist| %>
-    <td><%= waitlist.student_code %></td>
-    <td><%= waitlist.course_code %></td>
-    <td><%= link_to "Show this waitlist", waitlist %></td>
+    <tr>
+      <td><%= waitlist.student_code %></td>
+      <td><%= waitlist.course_code %></td>
+      <td><%= link_to "Show this waitlist", waitlist %></td>
   <% end %>
+  </tr>
   </tbody>
 </table>
 
