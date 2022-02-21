@@ -27,8 +27,6 @@
       <td><%= Student.find_by_id(enrollment.student_id).date_of_birth %></td>
       <td><%= Student.find_by_id(enrollment.student_id).phone_number %></td>
       <td><%= Student.find_by_id(enrollment.student_id).major %></td>
-      <!--      <td><%#= link_to 'Show', course %></td>-->
-      <!--      <td><%#= link_to 'Edit', edit_course_path(course) %></td>-->
       <td><%= link_to 'Unenroll', unenroll_enrollment_path(enrollment), method: :post, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>
@@ -40,7 +38,7 @@
 
 
 <%# if current_user.user_role != 'student' %>
-<%= link_to "New Enrollment", new_enrollment_path %>
+<%= link_to "New Enrollment", new_enrollment_path %><br><br>
 <%= link_to "New Waitlist", new_waitlist_path %>
 <%# end %>
 <%#= link_to 'Back', root_path %>

@@ -1,0 +1,43 @@
+<p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
+
+<h1>My Course Waitlisted Students</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Course Code</th>
+    <th>Student Code</th>
+    <th>Student Name</th>
+    <th>Email</th>
+    <th>Date of Birth</th>
+    <th>Phone Number</th>
+    <th>Major</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @waitlists.each do |waitlist| %>
+    <tr>
+      <td><%= waitlist.course_code %></td>
+      <td><%= waitlist.student_code %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).name %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).email %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).date_of_birth %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).phone_number %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).major %></td>
+      <td><%= link_to 'Remove', remove_waitlist_path(waitlist), method: :post, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+
+<% if current_user.user_role != 'student' %>
+<%= link_to "New Waitlist", new_waitlist_path %>
+<% end %>
+<%#= link_to 'Back', root_path %>

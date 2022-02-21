@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   get 'instructor_courses', to: "courses#show_instructor_courses", as: "instructor_courses"
   get 'student_enrollments', to: "courses#show_student_enrolled_courses", as: "student_enrollments"
   get 'show_instructor_students_enrolled', to: "enrollments#show_instructor_students_enrolled", as: "show_instructor_students_enrolled"
+  get 'show_instructor_students_waitlisted', to: "waitlists#show_instructor_students_waitlisted", as: "show_instructor_students_waitlisted"
+
 
   resources :courses do
     member do
@@ -38,6 +40,12 @@ Rails.application.routes.draw do
       get 'all_students'
     end
   end
+  resources :waitlists do
+    member do
+      get 'remove'
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

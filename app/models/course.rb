@@ -6,7 +6,7 @@ class Course < ApplicationRecord
   has_many :students
   belongs_to :student, optional: true
   belongs_to :instructor
-
+  has_many :waitlists, dependent: :destroy
 
   # validates :waitlist_capacity ,presence: true
   validates :course_code, presence: true, uniqueness: true
