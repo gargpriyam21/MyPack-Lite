@@ -24,7 +24,7 @@
       <td><%= Student.find_by_id(waitlist.student_id).date_of_birth %></td>
       <td><%= Student.find_by_id(waitlist.student_id).phone_number %></td>
       <td><%= Student.find_by_id(waitlist.student_id).major %></td>
-      <td><%= link_to 'Remove', remove_waitlist_path(waitlist), method: :post, data: { confirm: 'Are you sure?' } %></td>
+      <td><%= link_to 'Remove', remove_list_waitlist_path(waitlist), method: :post, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>
   </tbody>

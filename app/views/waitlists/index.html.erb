@@ -1,12 +1,20 @@
 <h1>Waitlists</h1>
 
-<div id="waitlists">
+<table>
+  <thead>
+  <tr>
+    <th> Student ID</th>
+    <th> Course Code</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+  <tbody>
   <% @waitlists.each do |waitlist| %>
-    <%= render waitlist %>
-    <p>
-      <%= link_to "Show this waitlist", waitlist %>
-    </p>
+    <td><%= waitlist.student_code %></td>
+    <td><%= waitlist.course_code %></td>
+    <td><%= link_to "Show this waitlist", waitlist %></td>
   <% end %>
-</div>
+  </tbody>
+</table>
 
 <%= link_to "New waitlist", new_waitlist_path %>
