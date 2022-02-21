@@ -1,0 +1,82 @@
+<h1>My Students</h1>
+
+<h1>Enrollments</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Course Code</th>
+    <th>Course Name</th>
+    <th>Student Code</th>
+    <th>Student Name</th>
+    <th>Email</th>
+    <th>Date of Birth</th>
+    <th>Phone Number</th>
+    <th>Major</th>
+    <th>Status</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @enrollments.each do |enrollment| %>
+    <tr>
+      <td><%= enrollment.course_code %></td>
+      <td><%= Course.find_by_course_code(enrollment.course_code).name %></td>
+      <td><%= enrollment.student_code %></td>
+      <td><%= Student.find_by_id(enrollment.student_id).name %></td>
+      <td><%= Student.find_by_id(enrollment.student_id).email %></td>
+      <td><%= Student.find_by_id(enrollment.student_id).date_of_birth %></td>
+      <td><%= Student.find_by_id(enrollment.student_id).phone_number %></td>
+      <td><%= Student.find_by_id(enrollment.student_id).major %></td>
+      <td> Enrolled</td>
+      <td><%= link_to 'Unenroll', unenroll_enrollment_path(enrollment), method: :post, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br><br>
+
+<h1>Waitlists</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Course Code</th>
+    <th>Course Name</th>
+    <th>Student Code</th>
+    <th>Student Name</th>
+    <th>Email</th>
+    <th>Date of Birth</th>
+    <th>Phone Number</th>
+    <th>Major</th>
+    <th>Status</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @waitlists.each do |waitlist| %>
+    <tr>
+      <td><%= waitlist.course_code %></td>
+      <td><%= Course.find_by_course_code(waitlist.course_code).name %></td>
+      <td><%= waitlist.student_code %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).name %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).email %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).date_of_birth %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).phone_number %></td>
+      <td><%= Student.find_by_id(waitlist.student_id).major %></td>
+      <td> Waitlisted</td>
+      <td><%= link_to 'Remove', remove_list_waitlist_path(waitlist), method: :post, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%# if current_user.user_role != 'student' %>
+<%= link_to "New Enrollment", new_enrollment_path %><br><br>
+<%#= link_to "New Waitlist", new_waitlist_path %>
+<%# end %>
+<%#= link_to 'Back', root_path %>

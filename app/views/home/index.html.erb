@@ -14,8 +14,9 @@
   <% elsif current_user.user_role == "instructor" %>
     <%= link_to "All Courses", courses_path %> <br><br>
     <%= link_to "My Courses", instructor_courses_path %> <br><br>
-    <%= link_to "My Students", show_instructor_students_enrolled_path %><br><br>
-    <%= link_to "My Waitlist Students", show_instructor_students_waitlisted_path %>
+<!--    <%#= link_to "My Students", show_instructor_students_enrolled_path %><br><br>-->
+<!--    <%#= link_to "My Waitlist Students", show_instructor_students_waitlisted_path %><br><br>-->
+    <%= link_to "My Students", show_instructor_students_path %>
 
   <% elsif current_user.user_role == "admin" %>
     <%= link_to "Show Profile", admins_path %> <br><br>

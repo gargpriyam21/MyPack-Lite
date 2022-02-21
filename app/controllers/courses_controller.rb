@@ -83,7 +83,7 @@ class CoursesController < ApplicationController
       else
         if @course.status == 'WAITLIST'
           if already_waitlisted
-            format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
+            format.html { redirect_to show_instructor_students_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
             format.json { render json: @waitlist.errors, status: :unprocessable_entity }
           else
             if @course.students_waitlisted < @course.waitlist_capacity

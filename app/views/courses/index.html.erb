@@ -6,8 +6,7 @@
     <th>Course Code</th>
     <th>Name</th>
     <th>Instructor Name</th>
-    <th>Weekday1</th>
-    <th>Weekday2</th>
+    <th>Weekdays</th>
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
@@ -23,12 +22,12 @@
       <td><%= course.course_code %></td>
       <td><%= course.name %></td>
       <td><%= course.instructor_name %></td>
-      <td><%= course.weekday1 %></td>
-      <% if course.weekday2.nil? %>
-        <td><%= "None" %></td>
-      <% else %>
-        <td><%= course.weekday2 %></td>
-      <% end %>
+      <td><%= course.weekday1 %>
+        <% if course.weekday2.nil? %>
+          <%= "" %>
+        <% else %>
+          <%= " and " + course.weekday2 %>
+        <% end %></td>
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>

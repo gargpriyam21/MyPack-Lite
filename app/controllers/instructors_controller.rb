@@ -95,6 +95,11 @@ class InstructorsController < ApplicationController
     end
   end
 
+  def show_instructor_students
+    @enrollments = Enrollment.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
+    @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
+  end
+
   # DELETE /instructors/1 or /instructors/1.json
   def destroy
     unless check_permissions?(session[:user_role], "delete_instructor")
