@@ -1,7 +1,8 @@
 class InstructorsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_instructor, only: %i[ show edit update destroy ]
-  before_action :correct_user,  only: [:edit, :update, :destroy, :show]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
   # GET /instructors or /instructors.json
   def index
@@ -34,8 +35,16 @@ class InstructorsController < ApplicationController
   end
 
   def correct_user
-    @instructor = Instructor.find_by_id ( params[:id] )
-    if !current_user.nil? && @instructor.user_id != current_user.id
+    if current_user.user_role != 'admin'
+      @instructor = Instructor.find_by_id(params[:id])
+      if !current_user.nil? && @instructor.user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+  end
+
+  def correct_code
+    if Instructor.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
