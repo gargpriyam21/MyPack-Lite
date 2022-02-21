@@ -21,7 +21,7 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/new
   def new
-    unless current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
+    unless check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     @instructor = Instructor.new
