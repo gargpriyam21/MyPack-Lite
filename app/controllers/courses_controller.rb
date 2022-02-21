@@ -8,7 +8,7 @@ class CoursesController < ApplicationController
     unless check_permissions?(session[:user_role], "view_course")
       redirect_to root_path
     end
-    @courses = Course.all
+    @courses = Course.all.order("course_code ASC")
   end
 
   # GET /courses/1 or /courses/1.json
@@ -140,8 +140,8 @@ class CoursesController < ApplicationController
     end
 
     @course = Course.find_by_id(params[:id])
-    @enrollments = Enrollment.where(course_id: @course.id)
-    @waitlists = Waitlist.where(course_id: @course.id)
+    @enrollments = Enrollment.where(course_id: @course.id).order("student_code ASC")
+    @waitlists = Waitlist.where(course_id: @course.id).order("student_code ASC")
 
     students = []
 
@@ -291,7 +291,7 @@ class CoursesController < ApplicationController
 
   def fill_and_update_enrollmets(format)
     @waitlists = Waitlist.where(course_id: @course.id)
-    if !@waitlists.nil? and @course.capacity > @course.students_enrolled
+    if !@waitlists.nil? and course_params[:capacity].to_i > @course.students_enrolled
       @waitlists.each do |waitlist|
         @enrollment = Enrollment.new
         @enrollment.student_code = waitlist.student_code
@@ -300,12 +300,13 @@ class CoursesController < ApplicationController
         @enrollment.student_id = waitlist.student_id
         @enrollment.instructor_id = waitlist.instructor_id
         if @enrollment.save
+          waitlist.destroy
           @course.update(students_waitlisted: (@course.students_waitlisted - 1))
           @course.update(students_enrolled: (@course.students_enrolled + 1))
           if @course.capacity == @course.students_enrolled
             break
           end
-          waitlist.destroy
+
         else
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
@@ -340,12 +341,12 @@ class CoursesController < ApplicationController
     @enrollment.instructor_id = @waitlist.instructor_id
     if @enrollment.save
       if @course.capacity == @course.students_enrolled
+        @course.update(students_waitlisted: (@course.students_waitlisted - 1))
         if @course.students_waitlisted < @course.waitlist_capacity
           @course.update(status: "WAITLIST")
         else
           @course.update(status: "CLOSED")
         end
-        @course.update(students_waitlisted: (@course.students_waitlisted - 1))
       end
     else
       format.html { render :new, status: :unprocessable_entity }

@@ -1,6 +1,8 @@
 class EnrollmentsController < ApplicationController
   before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_enrollment, only: %i[ show edit update destroy ]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
+
 
   # GET /enrollments or /enrollments.json
   def index
@@ -29,6 +31,20 @@ class EnrollmentsController < ApplicationController
   def edit
     unless check_permissions?(session[:user_role], "edit_enrollment")
       redirect_to root_path
+    end
+  end
+
+  def correct_user
+    @enrollment = Enrollment.find_by_id(params[:id])
+    if current_user.user_role == 'instructor'
+      if !current_user.nil? && Instructor.find_by_id(@enrollment.instructor_id).user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+    if current_user.user_role == 'student'
+      if !current_user.nil? && Student.find_by_id(@enrollment.student_id).user_id != current_user.id
+        redirect_to root_path
+      end
     end
   end
 
