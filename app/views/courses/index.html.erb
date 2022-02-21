@@ -42,9 +42,14 @@
       <% if current_user.user_role == 'instructor' %>
         <td><%= link_to "Students", all_students_course_path(course) %></td>
       <% end %>
-      <% if current_user.user_role == 'admin' or Instructor.find_by_user_id(session[:user_id]).id == course.instructor_id%>
+      <% if current_user.user_role == 'admin' %>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
         <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% elsif current_user.user_role == 'instructor' %>
+        <% if Instructor.find_by_user_id(session[:user_id]).id == course.instructor_id %>
+          <td><%= link_to 'Edit', edit_course_path(course) %></td>
+          <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       <% end %>
     </tr>
   <% end %>

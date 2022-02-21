@@ -119,17 +119,14 @@ class CoursesController < ApplicationController
     @student = Student.find_by_user_id(session[:user_id])
     @instructor = Instructor.find_by_id(@course.instructor_id)
 
-    if @course.status == 'WAITLISTED'
-      @waitlist = Enrollment.new
+    if @course.status == 'WAITLIST'
+      @waitlist = Waitlist.new
       @waitlist.student_code = @student.student_id
       @waitlist.course_code = @course.course_code
       @waitlist.student_id = @student.id
       @waitlist.course_id = @course.id
       @waitlist.instructor_id = @instructor.id
-
-
     else
-
       @enrollment = Enrollment.new
       @enrollment.student_code = @student.student_id
       @enrollment.course_code = @course.course_code
@@ -137,6 +134,7 @@ class CoursesController < ApplicationController
       @enrollment.course_id = @course.id
       @enrollment.instructor_id = @instructor.id
     end
+
     already_enrolled = !Enrollment.where(student_id: @student.id, course_id: @course.id)[0].nil?
     already_waitlisted = !Waitlist.where(student_id: @student.id, course_id: @course.id)[0].nil?
     respond_to do |format|
@@ -144,7 +142,7 @@ class CoursesController < ApplicationController
         format.html { redirect_to courses_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
         format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       else
-        if @course.status == 'WAITLISTED'
+        if @course.status == 'WAITLIST'
           if already_waitlisted
             format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
             format.json { render json: @waitlist.errors, status: :unprocessable_entity }
@@ -152,7 +150,7 @@ class CoursesController < ApplicationController
             if @course.students_waitlisted < @course.waitlist_capacity
               if @waitlist.save
                 format.html { redirect_to courses_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
-                format.json { render :show, status: :created, location: @enrollment }
+                format.json { render :show, status: :created, location: @waitlist }
                 @course.update(students_waitlisted: (@course.students_waitlisted + 1))
                 if @course.waitlist_capacity == @course.students_waitlisted
                   @course.update(status: "CLOSED")
@@ -175,7 +173,11 @@ class CoursesController < ApplicationController
             format.json { render :show, status: :created, location: @enrollment }
             @course.update(students_enrolled: (@course.students_enrolled + 1))
             if @course.capacity == @course.students_enrolled
-              @course.update(status: "CLOSED")
+              if @course.students_waitlisted < @course.waitlist_capacity
+                @course.update(status: "WAITLIST")
+              else
+                @course.update(status: "CLOSED")
+              end
             end
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -194,14 +196,45 @@ class CoursesController < ApplicationController
     @course = Course.find_by_id(params[:id])
     @student = Student.find_by_user_id(session[:user_id])
 
-    Enrollment.where(student_id: @student.id, course_id: @course.id)[0].destroy
+    @enrollment = Enrollment.where(student_id: @student.id, course_id: @course.id)
+    @enrollment[0].destroy
+    @waitlists = Waitlist.where(course_id: @course.id).order("created_at ASC")
+    @waitlist = @waitlists.first
+    if !@waitlist.nil?
+      fill_enrollment_details
+      if @enrollment.save
+        if @course.capacity == @course.students_enrolled
+          if @course.students_waitlisted < @course.waitlist_capacity
+            @course.update(status: "WAITLIST")
+          else
+            @course.update(status: "CLOSED")
+          end
+          @course.update(students_waitlisted: (@course.students_waitlisted - 1))
 
-    respond_to do |format|
-      format.html { redirect_to student_enrollments_path, notice: @student.name.to_s + " has successfully dropped " + @course.course_code.to_s }
-      if @course.status == "CLOSED"
-        @course.update(status: "OPEN")
+        end
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @enrollment.errors, status: :unprocessable_entity }
       end
-      @course.update(students_enrolled: (@course.students_enrolled - 1))
+      @waitlist.destroy
+      respond_to do |format|
+        format.html { redirect_to student_enrollments_path, notice: @student.name.to_s + " has successfully dropped in " + @course.course_code.to_s }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to student_enrollments_path, notice: @student.name.to_s + " has successfully dropped " + @course.course_code.to_s }
+        if @course.status == "WAITLIST"
+          @course.update(status: "OPEN")
+        elsif @course.status == "CLOSED"
+          if @course.waitlist_capacity == 0
+            @course.update(status: "OPEN")
+          else
+            @course.update(status: "WAITLIST")
+          end
+
+        end
+        @course.update(students_enrolled: (@course.students_enrolled - 1))
+      end
     end
   end
 
@@ -262,6 +295,15 @@ class CoursesController < ApplicationController
   # end
 
   private
+
+  def fill_enrollment_details
+    @enrollment = Enrollment.new
+    @enrollment.student_code = @waitlist.student_code
+    @enrollment.course_code = @waitlist.course_code
+    @enrollment.course_id = @waitlist.course_id
+    @enrollment.student_id = @waitlist.student_id
+    @enrollment.instructor_id = @waitlist.instructor_id
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_course
