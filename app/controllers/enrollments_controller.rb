@@ -4,7 +4,7 @@ class EnrollmentsController < ApplicationController
 
   # GET /enrollments or /enrollments.json
   def index
-    if !check_permissions?(session[:user_role], "view_enrollment")
+    unless check_permissions?(session[:user_role], "view_enrollment")
       redirect_to root_path
     end
     @enrollments = Enrollment.all
@@ -12,14 +12,14 @@ class EnrollmentsController < ApplicationController
 
   # GET /enrollments/1 or /enrollments/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_enrollment")
+    unless check_permissions?(session[:user_role], "show_enrollment")
       redirect_to root_path
     end
   end
 
   # GET /enrollments/new
   def new
-    if !check_permissions?(session[:user_role], "create_enrollment")
+    unless check_permissions?(session[:user_role], "create_enrollment")
       redirect_to root_path
     end
     @enrollment = Enrollment.new
@@ -27,7 +27,7 @@ class EnrollmentsController < ApplicationController
 
   # GET /enrollments/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_enrollment")
+    unless check_permissions?(session[:user_role], "edit_enrollment")
       redirect_to root_path
     end
   end
@@ -39,7 +39,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def show_instructor_students_enrolled
-    if !check_permissions?(session[:user_role], "show_instructor_students_enrolled")
+    unless check_permissions?(session[:user_role], "show_instructor_students_enrolled")
       redirect_to root_path
     end
     @enrollments = Enrollment.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
@@ -47,7 +47,7 @@ class EnrollmentsController < ApplicationController
 
   # POST /enrollments or /enrollments.json
   def create
-    if !check_permissions?(session[:user_role], "create_enrollment")
+    unless check_permissions?(session[:user_role], "create_enrollment")
       redirect_to root_path
     end
 
@@ -193,7 +193,7 @@ class EnrollmentsController < ApplicationController
 
   # PATCH/PUT /enrollments/1 or /enrollments/1.json
   def update
-    if !check_permissions?(session[:user_role], "update_enrollment")
+    unless check_permissions?(session[:user_role], "update_enrollment")
       redirect_to root_path
     end
 
@@ -209,7 +209,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def unenroll
-    if !check_permissions?(session[:user_role], "unenroll_course")
+    unless check_permissions?(session[:user_role], "unenroll_course")
       redirect_to root_path
     end
 
@@ -265,7 +265,7 @@ class EnrollmentsController < ApplicationController
 
   # DELETE /enrollments/1 or /enrollments/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_enrollment")
+    unless check_permissions?(session[:user_role], "delete_enrollment")
       redirect_to root_path
     end
     @enrollment.destroy
