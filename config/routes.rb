@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   end
   resources :waitlists do
     member do
-      get 'remove'
+      get 'remove_list'
     end
   end
 

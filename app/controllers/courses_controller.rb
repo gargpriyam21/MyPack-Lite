@@ -91,12 +91,12 @@ class CoursesController < ApplicationController
     if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
-    puts "Instructor"
-    puts @instructor
+
     if session[:user_role] == 'admin'
+      # puts course_params[:instructor_name]
       @course = Course.new(course_params)
-      @course.instructor_id = params[:instructor_id]
-      @course.instructor_name = Instructor.where(params[:instructor_id]).name
+      @course.instructor_id = Instructor.find_by_instructor_id(course_params[:instructor_name]).id
+      @course.instructor_name = Instructor.find_by_instructor_id(course_params[:instructor_name]).name
       @course.students_enrolled = 0
       @course.students_waitlisted = 0
       @course.status = "OPEN"

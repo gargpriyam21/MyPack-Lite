@@ -1,13 +1,22 @@
 <h1>Enrollments</h1>
 
-<div id="enrollments">
+
+<table>
+  <thead>
+  <tr>
+    <th> Student ID</th>
+    <th> Course Code</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+  <tbody>
   <% @enrollments.each do |enrollment| %>
-    <%= render enrollment %>
-    <p>
-      <%= link_to "Show this enrollment", enrollment %>
-    </p>
+    <td><%= enrollment.student_code %></td>
+    <td><%= enrollment.course_code %></td>
+    <td> <%= link_to "Show this enrollment", enrollment %></td>
   <% end %>
-</div>
+  </tbody>
+</table>
 
 <%= link_to "New enrollment", new_enrollment_path %>
 

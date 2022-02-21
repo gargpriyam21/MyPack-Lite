@@ -9,12 +9,12 @@ class Student < ApplicationRecord
 
   validates :phone_number, format: {
     with: /\A(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\z/,
-    message: "Not a valid Phone Number"
+    message: "Not Valid"
   }
 
   validates :email, format: {
     with: /^(|(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})\z/i,
-    message: "Invalid Email",
+    message: "is Invalid",
     multiline: true
   }
 end
