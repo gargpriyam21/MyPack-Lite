@@ -56,10 +56,12 @@
 
 <div>
   <% if current_user.user_role == 'student' %>
-    <% if Enrollment.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
-      <%= link_to "Enroll", enroll_course_path(@course) %>
-    <% else %>
-      <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
+    <% if Enrollment.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? and Waitlist.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+      <%= link_to "Enroll", enroll_course_path(@course) %><br><br>
+    <% elsif !Enrollment.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+      <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %><br><br>
+    <% elsif !Waitlist.where(student_id: Student.find_by_email(current_user.email).id, course_id: @course.id)[0].nil? %>
+      <%= link_to 'Remove', drop_waitlist_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %><br><br>
     <% end %>
   <% elsif current_user.user_role == 'admin' or (current_user.user_role == 'instructor' and Instructor.find_by_user_id(session[:user_id]).id == @course.instructor_id) %>
     <%= link_to "Edit this course", edit_course_path(@course) %><br><br>

@@ -32,6 +32,9 @@ class AdminsController < ApplicationController
   end
 
   def all_enrollments
+    unless check_permissions?(session[:user_role], "show_all_enrollments")
+      redirect_to root_path
+    end
     @enrollments = Enrollment.all.order("student_code ASC")
     @waitlists = Waitlist.all.order("student_code ASC")
   end
