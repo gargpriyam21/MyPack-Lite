@@ -9,7 +9,7 @@ class StudentsController < ApplicationController
     if !current_user.nil? && !check_permissions?(session[:user_role], "view_student")
       redirect_to root_path
     end
-    @students = Student.all
+    @students = Student.all.order("student_id ASC")
   end
 
   # GET /students/1 or /students/1.json

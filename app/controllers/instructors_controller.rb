@@ -9,7 +9,7 @@ class InstructorsController < ApplicationController
     unless check_permissions?(session[:user_role], "view_instructor")
       redirect_to root_path
     end
-    @instructors = Instructor.all
+    @instructors = Instructor.all.order("instructor_id ASC")
   end
 
   # GET /instructors/1 or /instructors/1.json

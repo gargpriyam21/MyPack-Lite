@@ -23,7 +23,7 @@
       <td><%= course.name %></td>
       <td><%= course.instructor_name %></td>
       <td><%= course.weekday1 %>
-        <% if course.weekday2.nil? %>
+        <% if course.weekday2.blank? %>
           <%= "" %>
         <% else %>
           <%= " and " + course.weekday2 %>
