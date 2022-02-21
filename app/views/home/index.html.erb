@@ -11,6 +11,7 @@
   <% if current_user.user_role == "student" %>
     <%= link_to "All Courses", courses_path %> <br><br>
     <%= link_to "My Enrollments", student_enrollments_path %> <br><br>
+    <%= link_to "My Waitlists", student_waitlists_path %><br><br>
 
   <% elsif current_user.user_role == "instructor" %>
     <%= link_to "All Courses", courses_path %> <br><br>

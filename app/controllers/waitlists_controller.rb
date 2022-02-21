@@ -50,12 +50,10 @@ class WaitlistsController < ApplicationController
     @student = Student.find_by_student_id(@waitlist.student_code)
 
     if @student.nil?
-      puts "Dev1"
       flash[:alert] = "Student doesn't exist"
       redirect_to new_waitlist_path
       return
     elsif @course.nil?
-      puts "Dev"
       flash[:alert] = "Course doesn't exist"
       redirect_to new_waitlist_path
       return
@@ -161,7 +159,7 @@ class WaitlistsController < ApplicationController
     end
   end
 
-  def remove
+  def remove_list
     if !check_permissions?(session[:user_role], "remove_waitlist")
       redirect_to root_path
     end
