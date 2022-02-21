@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
 
   # GET /courses or /courses.json
   def index
-    if !check_permissions?(session[:user_role], "view_course")
+    unless check_permissions?(session[:user_role], "view_course")
       redirect_to root_path
     end
     @courses = Course.all
@@ -13,26 +13,24 @@ class CoursesController < ApplicationController
 
   # GET /courses/1 or /courses/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_course")
+    unless check_permissions?(session[:user_role], "show_course")
       redirect_to root_path
     end
   end
 
   def show_instructor_courses
-    if !check_permissions?(session[:user_role], "show_instructor_student")
+    unless check_permissions?(session[:user_role], "show_instructor_student")
       redirect_to root_path
     end
     @courses = Course.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
   end
 
   def all_students
-    if !check_permissions?(session[:user_role], "show_all_student")
+    unless check_permissions?(session[:user_role], "show_all_student")
       redirect_to root_path
     end
     @course = Course.find_by_id(params[:id])
-    puts @course.id
     @enrollments = Enrollment.where(course_id: @course.id)
-    puts @enrollments.inspect
 
     students = []
 
@@ -40,13 +38,11 @@ class CoursesController < ApplicationController
       students.append(enrollment.student_id)
     end
 
-    puts students
-
     @students = Student.where(id: students)
   end
 
   def show_student_enrolled_courses
-    if !check_permissions?(session[:user_role], "show_enrolled_course")
+    unless check_permissions?(session[:user_role], "show_enrolled_course")
       redirect_to root_path
     end
     @enrollments = Enrollment.where(student_id: Student.find_by_user_id(session[:user_id]))
@@ -58,7 +54,7 @@ class CoursesController < ApplicationController
   end
 
   def show_student_waitlisted_courses
-    if !check_permissions?(session[:user_role], "show_waitlist_course")
+    unless check_permissions?(session[:user_role], "show_waitlist_course")
       redirect_to root_path
     end
     @waitlists = Waitlist.where(student_id: Student.find_by_user_id(session[:user_id]))
@@ -70,7 +66,7 @@ class CoursesController < ApplicationController
   end
 
   def new
-    if !check_permissions?(session[:user_role], "create_course")
+    unless check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
     @course = Course.new
@@ -81,7 +77,7 @@ class CoursesController < ApplicationController
 
   # GET /courses/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_course")
+    unless check_permissions?(session[:user_role], "edit_course")
       redirect_to root_path
     end
   end
@@ -103,12 +99,11 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
-    if !check_permissions?(session[:user_role], "create_course")
+    unless check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
     end
 
     if session[:user_role] == 'admin'
-      # puts course_params[:instructor_name]
       @course = Course.new(course_params)
       @course.instructor_id = Instructor.find_by_instructor_id(course_params[:instructor_name]).id
       @course.instructor_name = Instructor.find_by_instructor_id(course_params[:instructor_name]).name
@@ -139,7 +134,7 @@ class CoursesController < ApplicationController
   end
 
   def enroll
-    if !check_permissions?(session[:user_role], "enroll_course")
+    unless check_permissions?(session[:user_role], "enroll_course")
       redirect_to root_path
     end
     @course = Course.find_by_id(params[:id])
@@ -216,7 +211,7 @@ class CoursesController < ApplicationController
   end
 
   def drop
-    if !check_permissions?(session[:user_role], "drop_course")
+    unless check_permissions?(session[:user_role], "drop_course")
       redirect_to root_path
     end
 
@@ -266,7 +261,7 @@ class CoursesController < ApplicationController
   end
 
   def drop_waitlist
-    if !check_permissions?(session[:user_role], "remove_waitlist")
+    unless check_permissions?(session[:user_role], "remove_waitlist")
       redirect_to root_path
     end
 
@@ -293,7 +288,7 @@ class CoursesController < ApplicationController
 
   # PATCH/PUT /courses/1 or /courses/1.json
   def update
-    if !check_permissions?(session[:user_role], "update_course")
+    unless check_permissions?(session[:user_role], "update_course")
       redirect_to root_path
     end
 
@@ -324,7 +319,7 @@ class CoursesController < ApplicationController
 
   # DELETE /courses/1 or /courses/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_course")
+    unless check_permissions?(session[:user_role], "delete_course")
       redirect_to root_path
     end
     @course.destroy

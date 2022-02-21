@@ -1,6 +1,5 @@
 <h1>Enrollments</h1>
 
-
 <table>
   <thead>
   <tr>
@@ -11,10 +10,12 @@
   </thead>
   <tbody>
   <% @enrollments.each do |enrollment| %>
-    <td><%= enrollment.student_code %></td>
-    <td><%= enrollment.course_code %></td>
-    <td> <%= link_to "Show this enrollment", enrollment %></td>
+    <tr>
+      <td><%= enrollment.student_code %></td>
+      <td><%= enrollment.course_code %></td>
+      <td> <%= link_to "Show this enrollment", enrollment %></td>
   <% end %>
+  </tr>
   </tbody>
 </table>
 
