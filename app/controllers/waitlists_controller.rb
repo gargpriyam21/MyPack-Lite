@@ -172,13 +172,19 @@ class WaitlistsController < ApplicationController
 
     @waitlist = Waitlist.find_by_id(params[:id])
 
-    @waitlist.destroy
     @course = Course.find_by_id(@waitlist.course_id)
     @student = Student.find_by_id(@waitlist.student_id)
 
+    @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+    if @course.status = "CLOSED"
+      @course.update(status: "WAITLIST")
+    end
+
+    @waitlist.destroy
+
     respond_to do |format|
-      format.html { redirect_to show_instructor_students_waitlisted_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
-      @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+      format.html { redirect_to show_instructor_students_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
+      format.json { head :no_content }
     end
   end
 
@@ -188,13 +194,13 @@ class WaitlistsController < ApplicationController
       redirect_to root_path
     end
 
-    @courses = Course.find_by_id(@waitlist.course_id)
-    @courses.each do |course|
-      course.update(students_waitlisted: (@course.students_waitlisted - 1))
-      if course.status = "CLOSED"
-        course.update(status: "WAITLIST")
-      end
+    @course = Course.find_by_id(@waitlist.course_id)
+
+    @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+    if @course.status = "CLOSED"
+      @course.update(status: "WAITLIST")
     end
+
     @waitlist.destroy
 
     respond_to do |format|
@@ -215,3 +221,4 @@ class WaitlistsController < ApplicationController
     params.require(:waitlist).permit(:student_code, :course_code)
   end
 end
+

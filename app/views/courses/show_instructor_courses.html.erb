@@ -10,6 +10,7 @@
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
+    <th>Waitlist Capacity</th>
     <th>Status</th>
     <th colspan="3"></th>
   </tr>
@@ -21,15 +22,16 @@
       <td><%= course.course_code %></td>
       <td><%= course.name %></td>
       <td><%= course.instructor_name %></td>
-      <td><%= course.weekday1 %></td>
+      <td><%= course.weekday1 %>
       <% if course.weekday2.nil? %>
-        <td><%= "None" %></td>
+        <%= "" %>
       <% else %>
-        <td><%= course.weekday2 %></td>
-      <% end %>
+        <%= " and " + course.weekday2 %>
+      <% end %></td>
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
+      <td><%= course.students_waitlisted.to_s + '/' + course.waitlist_capacity.to_s %></td>
       <td><%= course.status %></td>
       <td><%= link_to 'Show', course %></td>
       <td><%= link_to 'Edit', edit_course_path(course) %></td>

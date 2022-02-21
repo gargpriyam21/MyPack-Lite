@@ -86,17 +86,17 @@ class EnrollmentsController < ApplicationController
       if current_user.user_role == 'instructor'
         if session[:user_id] == @instructor.user_id
           if already_enrolled
-            format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
+            format.html { redirect_to show_instructor_students_path, alert: @student.name.to_s + " is already enrolled in " + @course.course_code.to_s }
             format.json { render json: @enrollment.errors, status: :unprocessable_entity }
           else
             if @course.status == 'WAITLIST'
               if already_waitlisted
-                format.html { redirect_to show_instructor_students_wailtlisted_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
+                format.html { redirect_to show_instructor_students_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
               else
                 if @course.students_waitlisted < @course.waitlist_capacity
                   if @waitlist.save
-                    format.html { redirect_to show_instructor_students_wailtlisted_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
+                    format.html { redirect_to show_instructor_students_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
                     format.json { render :show, status: :created, location: @enrollment }
                     @course.update(students_waitlisted: (@course.students_waitlisted + 1))
                     if @course.waitlist_capacity == @course.students_waitlisted
@@ -107,16 +107,16 @@ class EnrollmentsController < ApplicationController
                     format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                   end
                 else
-                  format.html { redirect_to show_instructor_students_wailtlisted_path, alert: "Waitlist capacity is full" }
+                  format.html { redirect_to show_instructor_students_path, alert: "Waitlist capacity is full" }
                   format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 end
               end
             elsif @course.status == 'CLOSED'
-              format.html { redirect_to show_instructor_students_enrolled_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
+              format.html { redirect_to show_instructor_students_path, alert: @student.name.to_s + " can't be enrolled in " + @course.course_code.to_s + " since, the course is CLOSED" }
               format.json { render json: @enrollment.errors, status: :unprocessable_entity }
             else
               if @enrollment.save
-                format.html { redirect_to show_instructor_students_enrolled_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
+                format.html { redirect_to show_instructor_students_path, notice: @student.name.to_s + " is successfully enrolled in " + @course.course_code.to_s }
                 format.json { render :show, status: :created, location: @enrollment }
                 @course.update(students_enrolled: (@course.students_enrolled + 1))
                 if @course.capacity == @course.students_enrolled
@@ -133,7 +133,7 @@ class EnrollmentsController < ApplicationController
             end
           end
         else
-          format.html { redirect_to show_instructor_students_enrolled_path, alert: "You cannot enroll student in courses other than yours" }
+          format.html { redirect_to show_instructor_students_path, alert: "You cannot enroll student in courses other than yours" }
           format.json { render json: @enrollment.errors, status: :unprocessable_entity }
         end
       elsif current_user.user_role == "admin"
@@ -279,7 +279,7 @@ class EnrollmentsController < ApplicationController
     if current_user.user_role == 'admin'
       return all_enrollments_path
     else
-      return show_instructor_students_enrolled_path
+      return show_instructor_students_path
     end
   end
 
