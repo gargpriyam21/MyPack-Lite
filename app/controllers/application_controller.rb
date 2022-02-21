@@ -24,9 +24,9 @@ class ApplicationController < ActionController::Base
     # show_all_student, show_instructor_students_enrolled
 
     @actions = {
-      "instructor" => ['create_course', 'delete_course', 'update_course', 'edit_course', 'show_course', 'show_instructor_course', 'create_enrollment', 'delete_enrollment', 'edit_enrollment', 'update_enrollment', 'show_enrollment', 'show_instructor', 'show_student', 'showinstructorcourses', 'show_instructor_student', 'view_course', 'show_all_student', 'show_instructor_students_enrolled', 'unenroll_course'],
+      "instructor" => ['create_course', 'delete_course', 'update_course', 'edit_course', 'show_course', 'show_instructor_course', 'create_enrollment', 'delete_enrollment', 'edit_enrollment', 'update_enrollment', 'show_enrollment', 'show_instructor', 'show_student', 'showinstructorcourses', 'show_instructor_student', 'view_course', 'show_all_student', 'show_instructor_students_enrolled', 'unenroll_course','create_waitlist','delete_waitlist','update_waitlist','view_waitlist','show_waitlist','edit_waitlist','remove_waitlist'],
       "admin" => ['create_course', 'create_enrollment', 'create_instructor', 'create_student', 'create_waitlist', 'delete_admin', 'delete_course', 'delete_enrollment', 'delete_instructor', 'delete_student', 'delete_waitlist', 'drop_course', 'edit_admin', 'edit_course', 'edit_enrollment', 'edit_instructor', 'edit_student', 'edit_waitlist', 'enroll_course', 'show_admin', 'show_all_student', 'show_course', 'show_enrollment', 'show_instructor', 'show_instructor_students_enrolled', 'show_student', 'show_waitlist', 'update_admin', 'update_course', 'update_enrollment', 'update_instructor', 'update_student', 'update_waitlist', 'view_admin', 'view_course', 'view_enrollment', 'view_instructor', 'view_student', 'view_waitlist'],
-      "student" => ['show_course', 'view_course', 'enroll_course', 'drop_course', 'show_enrolled_course']
+      "student" => ['show_course', 'view_course', 'enroll_course', 'drop_course', 'show_enrolled_course','show_waitlist_course','remove_waitlist']
     }
     if @actions[user_role] && @actions[user_role].include?(action)
       return true

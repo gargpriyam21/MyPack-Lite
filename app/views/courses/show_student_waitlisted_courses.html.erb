@@ -1,0 +1,50 @@
+<p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
+
+<h1>Courses</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Course Code</th>
+    <th>Name</th>
+    <th>Instructor Name</th>
+    <th>Weekdays</th>
+    <th>Room</th>
+    <th>Time</th>
+    <th>Capacity</th>
+    <th>Status</th>
+    <th colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @courses.each do |course| %>
+    <tr>
+      <td><%= course.course_code %></td>
+      <td><%= course.name %></td>
+      <td><%= course.instructor_name %></td>
+      <% if course.weekday2.nil? %>
+        <td><%= "None" %></td>
+      <% else %>
+        <td><%= course.weekday2 %></td>
+      <% end %>
+      <td><%= course.room %></td>
+      <td><%= course.start_time + ' - ' + course.end_time %></td>
+      <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
+      <td><%= course.status %></td>
+      <td><%= link_to 'Show', course %></td>
+      <td><%= link_to 'Remove', drop_waitlist_course_path(course), method: :post, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<% if current_user.user_role != 'student' %>
+  <%= link_to "New course", new_course_path %> <br><br>
+<% end %>
+<%#= link_to 'Back', root_path %>
+<%= link_to "Back", :back %> <br><br>
+<%= link_to "All Courses", courses_path %>

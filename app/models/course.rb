@@ -6,12 +6,12 @@ class Course < ApplicationRecord
   has_many :students
   belongs_to :student, optional: true
   belongs_to :instructor
-
+  has_many :waitlists, dependent: :destroy
 
   # validates :waitlist_capacity ,presence: true
   validates :course_code, presence: true, uniqueness: true
   # validates :weekday2, presence: false
-  validates :name, :description, :weekday1, :start_time, :end_time, :capacity, :room, presence: true
+  validates :name, :description, :weekday1, :start_time, :end_time, :capacity,:waitlist_capacity, :room, presence: true
   validates :weekday2,allow_blank: true, comparison: { other_than: :weekday1 }, presence: false
   validates :start_time,:end_time, format: {
     with: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
