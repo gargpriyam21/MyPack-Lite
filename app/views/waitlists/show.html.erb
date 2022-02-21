@@ -1,7 +1,14 @@
 <%= render @waitlist %>
 
 <div>
-  <%= link_to "Edit this waitlist", edit_waitlist_path(@waitlist) %> <br><br>
+  <!--  <%#= link_to "Edit this waitlist", edit_waitlist_path(@waitlist) %> <br><br>-->
   <%= button_to "Destroy this waitlist", @waitlist, method: :delete %><br>
+
+  <% if current_user.user_role == 'admin' %>
+    <%= link_to "All Enrollments", all_enrollments_path %> <br><br>
+  <% elsif current_user.user_role == 'instructor' %>
+    <%= link_to "My Students", show_instructor_students_path %><br><br>
+  <% end %>
+
   <%= link_to "Back to waitlists", waitlists_path %>
 </div>

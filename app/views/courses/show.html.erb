@@ -29,9 +29,25 @@
 
 <p>
   <strong> Capacity: </strong>
-  <%= @course.capacity.to_s + " Students" %>
+  <% if @course.students_enrolled == 0 %>
+    <%= @course.students_enrolled.to_s + " students are enrolled out of " + @course.capacity.to_s + " Students" %>
+  <% elsif @course.students_enrolled == 1 %>
+    <%= @course.students_enrolled.to_s + " student is enrolled out of " + @course.capacity.to_s + " Students" %>
+  <% else %>
+    <%= @course.students_enrolled.to_s + " students are enrolled out of " + @course.capacity.to_s + " Students" %>
+  <% end %>
 </p>
 
+<p>
+  <strong> Waitlist Capacity: </strong>
+  <% if @course.students_waitlisted == 0 %>
+    <%= @course.students_waitlisted.to_s + " students are waitlisted out of " + @course.waitlist_capacity.to_s + " Students" %>
+  <% elsif @course.students_waitlisted == 1 %>
+    <%= @course.students_waitlisted.to_s + " student is waitlisted out of " + @course.waitlist_capacity.to_s + " Students" %>
+  <% else %>
+    <%= @course.students_waitlisted.to_s + " students are waitlisted out of " + @course.waitlist_capacity.to_s + " Students" %>
+  <% end %>
+</p>
 
 <p>
   <strong> Status: </strong>
@@ -45,7 +61,7 @@
     <% else %>
       <%= link_to 'Drop', drop_course_path(@course), method: :post, data: { confirm: 'Are you sure?' } %>
     <% end %>
-  <% elsif current_user.user_role == 'admin' or ( current_user.user_role == 'instructor' and Instructor.find_by_user_id(session[:user_id]).id == @course.instructor_id) %>
+  <% elsif current_user.user_role == 'admin' or (current_user.user_role == 'instructor' and Instructor.find_by_user_id(session[:user_id]).id == @course.instructor_id) %>
     <%= link_to "Edit this course", edit_course_path(@course) %><br><br>
     <%= button_to "Destroy this course", @course, method: :delete %> <br>
   <% end %>
