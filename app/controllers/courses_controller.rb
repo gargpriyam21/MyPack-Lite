@@ -57,6 +57,18 @@ class CoursesController < ApplicationController
     @courses = Course.where(id: courses)
   end
 
+  def show_student_waitlisted_courses
+    if !check_permissions?(session[:user_role], "show_waitlist_course")
+      redirect_to root_path
+    end
+    @waitlists = Waitlist.where(student_id: Student.find_by_user_id(session[:user_id]))
+    courses = []
+    @waitlists.each do |waitlist|
+      courses.append(waitlist.course_id)
+    end
+    @courses = Course.where(id: courses)
+  end
+
   def new
     if !check_permissions?(session[:user_role], "create_course")
       redirect_to root_path
@@ -235,6 +247,32 @@ class CoursesController < ApplicationController
         end
         @course.update(students_enrolled: (@course.students_enrolled - 1))
       end
+    end
+  end
+
+  def drop_waitlist
+    if !check_permissions?(session[:user_role], "remove_waitlist")
+      redirect_to root_path
+    end
+
+    @course = Course.find_by_id(params[:id])
+    @student = Student.find_by_user_id(session[:user_id])
+
+    @waitlist = Waitlist.where(student_id: @student.id, course_id: @course.id)
+    @waitlist[0].destroy
+    @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+    if @course.status == "WAITLIST"
+      @course.update(status: "OPEN")
+    elsif @course.status == "CLOSED"
+      if @course.waitlist_capacity == 0
+        @course.update(status: "OPEN")
+      else
+        @course.update(status: "WAITLIST")
+      end
+
+    end
+    respond_to do |format|
+      format.html { redirect_to student_waitlists_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
     end
   end
 
