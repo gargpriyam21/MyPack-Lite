@@ -20,6 +20,9 @@
 </table>
 
 <br>
-
+<% if current_user.user_role == 'admin' %>
+  <%= link_to "All Enrollments", all_enrollments_path %>
+<% end %>
+<br><br>
 <%= link_to "New enrollment", new_enrollment_path %>
 
