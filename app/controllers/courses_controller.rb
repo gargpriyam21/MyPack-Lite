@@ -138,8 +138,10 @@ class CoursesController < ApplicationController
     unless check_permissions?(session[:user_role], "show_all_student")
       redirect_to root_path
     end
+
     @course = Course.find_by_id(params[:id])
     @enrollments = Enrollment.where(course_id: @course.id)
+    @waitlists = Waitlist.where(course_id: @course.id)
 
     students = []
 
@@ -148,6 +150,15 @@ class CoursesController < ApplicationController
     end
 
     @students = Student.where(id: students)
+
+    waitlisted_studets = []
+
+    @waitlists.each do |waitlist|
+      waitlisted_studets.append(waitlist.student_id)
+    end
+
+    @students_wait = Student.where(id: waitlisted_studets)
+
   end
 
   def show_student_enrolled_courses

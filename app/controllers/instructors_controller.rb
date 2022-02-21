@@ -6,7 +6,7 @@ class InstructorsController < ApplicationController
 
   # GET /instructors or /instructors.json
   def index
-    if !check_permissions?(session[:user_role], "view_instructor")
+    unless check_permissions?(session[:user_role], "view_instructor")
       redirect_to root_path
     end
     @instructors = Instructor.all
@@ -14,14 +14,14 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/1 or /instructors/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_instructor")
+    unless check_permissions?(session[:user_role], "show_instructor")
       redirect_to root_path
     end
   end
 
   # GET /instructors/new
   def new
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     @instructor = Instructor.new
@@ -29,7 +29,7 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_instructor")
+    unless check_permissions?(session[:user_role], "edit_instructor")
       redirect_to root_path
     end
   end
@@ -51,7 +51,7 @@ class InstructorsController < ApplicationController
 
   # POST /instructors or /instructors.json
   def create
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     email = params[:instructor][:email]
@@ -64,7 +64,7 @@ class InstructorsController < ApplicationController
         @instructor = Instructor.new(instructor_params)
         @instructor.user_id = @user.id
         if @instructor.save
-          if (not current_user.nil? and current_user.user_role == "admin")
+          if not current_user.nil? and current_user.user_role == "admin"
             format.html { redirect_to @instructor, notice: "Instructor was successfully created by Admin." }
             format.json { render :show, status: :created, location: @instructor }
           else
@@ -81,7 +81,7 @@ class InstructorsController < ApplicationController
 
   # PATCH/PUT /instructors/1 or /instructors/1.json
   def update
-    if !check_permissions?(session[:user_role], "update_instructor")
+    unless check_permissions?(session[:user_role], "update_instructor")
       redirect_to root_path
     end
     respond_to do |format|
@@ -97,7 +97,7 @@ class InstructorsController < ApplicationController
 
   # DELETE /instructors/1 or /instructors/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_instructor")
+    unless check_permissions?(session[:user_role], "delete_instructor")
       redirect_to root_path
     end
     @instructor.destroy
