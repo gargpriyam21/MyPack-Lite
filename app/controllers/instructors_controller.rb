@@ -1,6 +1,7 @@
 class InstructorsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
   before_action :set_instructor, only: %i[ show edit update destroy ]
+  before_action :correct_user,  only: [:edit, :update, :destroy, :show]
 
   # GET /instructors or /instructors.json
   def index
@@ -28,6 +29,13 @@ class InstructorsController < ApplicationController
   # GET /instructors/1/edit
   def edit
     if !check_permissions?(session[:user_role], "edit_instructor")
+      redirect_to root_path
+    end
+  end
+
+  def correct_user
+    @instructor = Instructor.find_by_id ( params[:id] )
+    if !current_user.nil? && @instructor.user_id != current_user.id
       redirect_to root_path
     end
   end
