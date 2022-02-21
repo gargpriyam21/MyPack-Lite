@@ -1,8 +1,7 @@
 class CoursesController < ApplicationController
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_course, only: %i[ show edit update destroy ]
-  # before_action :correct_user, only: [:drop]
-  # before_action :authorized, only: [:index]
-  # before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
   # GET /courses or /courses.json
   def index
@@ -83,6 +82,21 @@ class CoursesController < ApplicationController
   # GET /courses/1/edit
   def edit
     if !check_permissions?(session[:user_role], "edit_course")
+      redirect_to root_path
+    end
+  end
+
+  def correct_user
+    @course = Course.find_by_id(params[:id])
+    if current_user.user_role != 'admin'
+      if !current_user.nil? && Instructor.find_by_id(@course.instructor_id).user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+  end
+
+  def correct_code
+    if Course.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
@@ -173,7 +187,7 @@ class CoursesController < ApplicationController
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
               end
             else
-              format.html { redirect_to courses_path,alert: "Waitlist capacity is full" }
+              format.html { redirect_to courses_path, alert: "Waitlist capacity is full" }
               format.json { render json: @waitlist.errors, status: :unprocessable_entity }
             end
           end
@@ -351,6 +365,6 @@ class CoursesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:name, :description, :instructor_name, :weekday1,:weekday2, :start_time, :end_time, :course_code, :capacity, :students_enrolled,:waitlist_capacity,:students_enrolled, :status, :room)
+    params.require(:course).permit(:name, :description, :instructor_name, :weekday1, :weekday2, :start_time, :end_time, :course_code, :capacity, :students_enrolled, :waitlist_capacity, :students_enrolled, :status, :room)
   end
 end

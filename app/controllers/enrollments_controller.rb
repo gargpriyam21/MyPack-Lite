@@ -1,4 +1,5 @@
 class EnrollmentsController < ApplicationController
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_enrollment, only: %i[ show edit update destroy ]
 
   # GET /enrollments or /enrollments.json
@@ -27,6 +28,12 @@ class EnrollmentsController < ApplicationController
   # GET /enrollments/1/edit
   def edit
     if !check_permissions?(session[:user_role], "edit_enrollment")
+      redirect_to root_path
+    end
+  end
+
+  def correct_code
+    if Enrollment.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end

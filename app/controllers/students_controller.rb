@@ -1,5 +1,6 @@
 class StudentsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_student, only: %i[ show edit update destroy ]
   before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
@@ -34,8 +35,16 @@ class StudentsController < ApplicationController
   end
 
   def correct_user
-    @student = Student.find_by_id(params[:id])
-    if !current_user.nil? && @student.user_id != current_user.id
+    if current_user.user_role != 'admin'
+      @student = Student.find_by_id(params[:id])
+      if !current_user.nil? && @student.user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+  end
+
+  def correct_code
+    if Student.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
