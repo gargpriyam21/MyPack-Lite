@@ -21,7 +21,7 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/new
   def new
-    if !current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
+    unless current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     @instructor = Instructor.new
@@ -96,6 +96,9 @@ class InstructorsController < ApplicationController
   end
 
   def show_instructor_students
+    unless check_permissions?(session[:user_role], "show_instructor_students")
+      redirect_to root_path
+    end
     @enrollments = Enrollment.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
     @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
   end

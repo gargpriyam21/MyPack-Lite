@@ -39,7 +39,7 @@ class WaitlistsController < ApplicationController
   end
 
   def show_instructor_students_waitlisted
-    unless check_permissions?(session[:user_role], "show_instructor_students_enrolled")
+    unless check_permissions?(session[:user_role], "show_instructor_students_waitlisted")
       redirect_to root_path
     end
     @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)

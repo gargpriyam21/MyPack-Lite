@@ -3,6 +3,7 @@ class Student < ApplicationRecord
   belongs_to :user, dependent: :destroy
   has_many :courses
   has_many :enrollments, dependent: :destroy
+  has_many :waitlists, dependent: :destroy
 
   validates :email, :student_id, presence: true, uniqueness: true
   validates :name, :password_digest, :date_of_birth, :phone_number, :major, presence: true
