@@ -211,12 +211,28 @@ class EnrollmentsController < ApplicationController
     end
 
     @enrollment = Enrollment.find_by_id(params[:id])
-    @enrollment.destroy
+    dest_enroll_and_wait
+
+  end
+
+  # DELETE /enrollments/1 or /enrollments/1.json
+  def destroy
+    unless check_permissions?(session[:user_role], "delete_enrollment")
+      redirect_to root_path
+    end
+    @enrollment = @enrollment
+    dest_enroll_and_wait
+  end
+
+  private
+
+  def dest_enroll_and_wait
     @course = Course.find_by_id(@enrollment.course_id)
     @student = Student.find_by_id(@enrollment.student_id)
 
     @waitlists = Waitlist.where(course_id: @course.id).order("created_at ASC")
     @waitlist = @waitlists.first
+    @enrollment.destroy
 
     if !@waitlist.nil?
       @enrollment = Enrollment.new
@@ -240,12 +256,11 @@ class EnrollmentsController < ApplicationController
       end
       @waitlist.destroy
       respond_to do |format|
-        format.html { redirect_to show_instructor_students_enrolled_path, notice: @student.name.to_s + " has been successfully unenrolled in " + @course.course_code.to_s }
+        format.html { redirect_to get_path, notice: @student.name.to_s + " has been successfully unenrolled in " + @course.course_code.to_s }
       end
     else
-      @enrollment.destroy
       respond_to do |format|
-        format.html { redirect_to show_instructor_students_enrolled_path, notice: @student.name.to_s + " has been successfully unenrolled in " + @course.course_code.to_s }
+        format.html { redirect_to get_path, notice: @student.name.to_s + " has been successfully unenrolled in " + @course.course_code.to_s }
         if @course.status == "WAITLIST"
           @course.update(status: "OPEN")
         elsif @course.status == "CLOSED"
@@ -260,27 +275,13 @@ class EnrollmentsController < ApplicationController
     end
   end
 
-  # DELETE /enrollments/1 or /enrollments/1.json
-  def destroy
-    unless check_permissions?(session[:user_role], "delete_enrollment")
-      redirect_to root_path
-    end
-    @enrollment.destroy
-    @courses = Course.find_by_id(id: @enrollment.course_id)
-    @courses.each do |course|
-      if course.status = "CLOSED"
-        course.update(status: "OPEN")
-      end
-      course.update(students_enrolled: (@course.students_enrolled - 1))
-    end
-
-    respond_to do |format|
-      format.html { redirect_to enrollments_url, notice: "Enrollment was successfully destroyed." }
-      format.json { head :no_content }
+  def get_path
+    if current_user.user_role == 'admin'
+      return all_enrollments_path
+    else
+      return show_instructor_students_enrolled_path
     end
   end
-
-  private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_enrollment

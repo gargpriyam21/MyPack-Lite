@@ -188,7 +188,7 @@ class WaitlistsController < ApplicationController
       redirect_to root_path
     end
 
-    @courses = Course.find_by_id(id: @enrollment.course_id)
+    @courses = Course.find_by_id(@waitlist.course_id)
     @courses.each do |course|
       course.update(students_waitlisted: (@course.students_waitlisted - 1))
       if course.status = "CLOSED"
