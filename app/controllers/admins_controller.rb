@@ -3,7 +3,7 @@ class AdminsController < ApplicationController
 
   # GET /admins or /admins.json
   def index
-    if !check_permissions?(session[:user_role], "view_admin")
+    unless check_permissions?(session[:user_role], "view_admin")
       redirect_to root_path
     end
     @admins = Admin.all
@@ -11,14 +11,14 @@ class AdminsController < ApplicationController
 
   # GET /admins/1 or /admins/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_admin")
+    unless check_permissions?(session[:user_role], "show_admin")
       redirect_to root_path
     end
   end
 
   # GET /admins/new
   def new
-    if !check_permissions?(session[:user_role], "create_admin")
+    unless check_permissions?(session[:user_role], "create_admin")
       redirect_to root_path
     end
     @admin = Admin.new
@@ -26,14 +26,19 @@ class AdminsController < ApplicationController
 
   # GET /admins/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_admin")
+    unless check_permissions?(session[:user_role], "edit_admin")
       redirect_to root_path
     end
   end
 
+  def all_enrollments
+    @enrollments = Enrollment.all.order("student_code ASC")
+    @waitlists = Waitlist.all.order("student_code ASC")
+  end
+
   # POST /admins or /admins.json
   def create
-    if !check_permissions?(session[:user_role], "create_admin")
+    unless check_permissions?(session[:user_role], "create_admin")
       redirect_to root_path
     end
     @admin = Admin.new(admin_params)
@@ -51,7 +56,7 @@ class AdminsController < ApplicationController
 
   # PATCH/PUT /admins/1 or /admins/1.json
   def update
-    if !check_permissions?(session[:user_role], "update_admin")
+    unless check_permissions?(session[:user_role], "update_admin")
       redirect_to root_path
     end
     respond_to do |format|
@@ -67,7 +72,7 @@ class AdminsController < ApplicationController
 
   # DELETE /admins/1 or /admins/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_admin")
+    unless check_permissions?(session[:user_role], "delete_admin")
       redirect_to root_path
     end
     @admin.destroy

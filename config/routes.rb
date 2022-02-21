@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get 'show_instructor_students_enrolled', to: "enrollments#show_instructor_students_enrolled", as: "show_instructor_students_enrolled"
   get 'show_instructor_students_waitlisted', to: "waitlists#show_instructor_students_waitlisted", as: "show_instructor_students_waitlisted"
   get 'student_waitlists', to: "courses#show_student_waitlisted_courses", as: "student_waitlists"
+  get 'all_enrollments', to: "admins#all_enrollments", as: "all_enrollments"
 
   resources :courses do
     member do
@@ -46,6 +47,7 @@ Rails.application.routes.draw do
       get 'all_students'
     end
   end
+
   resources :waitlists do
     member do
       get 'remove_list'

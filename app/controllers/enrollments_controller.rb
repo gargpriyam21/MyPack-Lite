@@ -148,7 +148,7 @@ class EnrollmentsController < ApplicationController
             else
               if @course.students_waitlisted < @course.waitlist_capacity
                 if @waitlist.save
-                  format.html { redirect_to enrollments_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
+                  format.html { redirect_to waitlists_path, notice: @student.name.to_s + " is successfully waitlisted in " + @course.course_code.to_s }
                   format.json { render :show, status: :created, location: @enrollment }
                   @course.update(students_waitlisted: (@course.students_waitlisted + 1))
                   if @course.waitlist_capacity == @course.students_waitlisted

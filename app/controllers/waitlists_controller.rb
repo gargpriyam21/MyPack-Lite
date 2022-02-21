@@ -4,7 +4,7 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists or /waitlists.json
   def index
-    if !check_permissions?(session[:user_role], "view_waitlist")
+    unless check_permissions?(session[:user_role], "view_waitlist")
       redirect_to root_path
     end
     @waitlists = Waitlist.all
@@ -12,14 +12,14 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists/1 or /waitlists/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_waitlist")
+    unless check_permissions?(session[:user_role], "show_waitlist")
       redirect_to root_path
     end
   end
 
   # GET /waitlists/new
   def new
-    if !check_permissions?(session[:user_role], "create_waitlist")
+    unless check_permissions?(session[:user_role], "create_waitlist")
       redirect_to root_path
     end
     @waitlist = Waitlist.new
@@ -27,7 +27,7 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_waitlist")
+    unless check_permissions?(session[:user_role], "edit_waitlist")
       redirect_to root_path
     end
   end
@@ -39,7 +39,7 @@ class WaitlistsController < ApplicationController
   end
 
   def show_instructor_students_waitlisted
-    if !check_permissions?(session[:user_role], "show_instructor_students_enrolled")
+    unless check_permissions?(session[:user_role], "show_instructor_students_enrolled")
       redirect_to root_path
     end
     @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
@@ -47,7 +47,7 @@ class WaitlistsController < ApplicationController
 
   # POST /waitlists or /waitlists.json
   def create
-    if !check_permissions?(session[:user_role], "create_waitlist")
+    unless check_permissions?(session[:user_role], "create_waitlist")
       redirect_to root_path
     end
 
@@ -166,7 +166,7 @@ class WaitlistsController < ApplicationController
   end
 
   def remove_list
-    if !check_permissions?(session[:user_role], "remove_waitlist")
+    unless check_permissions?(session[:user_role], "remove_waitlist")
       redirect_to root_path
     end
 
@@ -184,7 +184,7 @@ class WaitlistsController < ApplicationController
 
   # DELETE /waitlists/1 or /waitlists/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_waitlist")
+    unless check_permissions?(session[:user_role], "delete_waitlist")
       redirect_to root_path
     end
 

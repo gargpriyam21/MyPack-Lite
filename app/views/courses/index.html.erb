@@ -11,6 +11,7 @@
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
+    <th>Waitlist Capacity</th>
     <th>Status</th>
     <th colspan="4"></th>
   </tr>
@@ -31,6 +32,7 @@
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
+      <td><%= course.students_waitlisted.to_s + '/' + course.waitlist_capacity.to_s %></td>
       <td><%= course.status %></td>
       <td><%= link_to 'Show', course %></td>
       <% if current_user.user_role == 'student' %>

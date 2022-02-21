@@ -1,0 +1,72 @@
+<h1>All Enrollments</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Student ID</th>
+    <th>Student Name</th>
+    <th>Course Code</th>
+    <th>Course Name</th>
+    <th>Instructor</th>
+    <th>Status</th>
+    <th>Major</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @enrollments.each do |enrollment| %>
+    <tr>
+      <td><%= enrollment.student_code %></td>
+      <td><%= Student.find_by_student_id(enrollment.student_code).name %></td>
+      <td><%= enrollment.course_code %></td>
+      <td><%= Course.find_by_course_code(enrollment.course_code).name %></td>
+      <td><%= Course.find_by_course_code(enrollment.course_code).instructor_name %></td>
+      <td>Enrolled</td>
+      <td><%= Student.find_by_student_id(enrollment.student_code).major %></td>
+      <td> <%= link_to "Show this enrollment", enrollment %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br><br>
+
+<h1>All Waitlists</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Student ID</th>
+    <th>Student Name</th>
+    <th>Course Code</th>
+    <th>Course Name</th>
+    <th>Instructor</th>
+    <th>Status</th>
+    <th>Major</th>
+    <th colspan="1"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @waitlists.each do |waitlist| %>
+    <tr>
+      <td><%= waitlist.student_code %></td>
+      <td><%= Student.find_by_student_id(waitlist.student_code).name %></td>
+      <td><%= waitlist.course_code %></td>
+      <td><%= Course.find_by_course_code(waitlist.course_code).name %></td>
+      <td><%= Course.find_by_course_code(waitlist.course_code).instructor_name %></td>
+      <td>Waitlisted</td>
+      <td><%= Student.find_by_student_id(waitlist.student_code).major %></td>
+      <td> <%= link_to "Show this waitlist", waitlist %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<div>
+  <br>
+  <%= link_to "Enroll Student", new_enrollment_path %> <br><br>
+  <%= link_to "All Courses", courses_path %><br><br>
+</div>
+<br>
