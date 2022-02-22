@@ -11,6 +11,7 @@ class Course < ApplicationRecord
   validates :course_code, presence: true, uniqueness: true
   validates :name, :description, :weekday1, :start_time, :end_time, :capacity, :waitlist_capacity, :room, presence: true
   validates :weekday2, allow_blank: true, comparison: { other_than: :weekday1 }, presence: false
+  validates :capacity, :waitlist_capacity, presence: true, numericality: { greater_than: -1 }
 
   validates :course_code, format: {
     with: /^[A-Za-z]{0,3}[0-9]{3}$/,
