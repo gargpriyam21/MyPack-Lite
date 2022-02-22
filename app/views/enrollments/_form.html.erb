@@ -13,12 +13,14 @@
 
   <div>
     <%= form.label "Student ID", style: "display: block" %>
-    <%= form.text_field :student_code %>
+    <%= form.select :student_code, Student.all.order("student_id ASC").collect { |x| [x.student_id] } %>
+    <%#= form.text_field :student_code %>
   </div>
 
   <div>
     <%= form.label "Course Code", style: "display: block" %>
-    <%= form.text_field :course_code %>
+    <%= form.select :course_code, Course.all.order("course_code ASC").collect { |x| [x.course_code] } %>
+    <%#= form.text_field :course_code %>
   </div>
 
   <div>

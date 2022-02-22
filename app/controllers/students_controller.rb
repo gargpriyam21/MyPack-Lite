@@ -1,25 +1,27 @@
 class StudentsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_student, only: %i[ show edit update destroy ]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
   # GET /students or /students.json
   def index
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "view_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "view_student")
       redirect_to root_path
     end
-    @students = Student.all
+    @students = Student.all.order("student_id ASC")
   end
 
   # GET /students/1 or /students/1.json
   def show
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "show_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "show_student")
       redirect_to root_path
     end
   end
 
   # GET /students/new
   def new
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "create_student")
       redirect_to root_path
     end
     @student = Student.new
@@ -27,14 +29,29 @@ class StudentsController < ApplicationController
 
   # GET /students/1/edit
   def edit
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "edit_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "edit_student")
+      redirect_to root_path
+    end
+  end
+
+  def correct_user
+    if current_user.user_role != 'admin'
+      @student = Student.find_by_id(params[:id])
+      if !current_user.nil? && @student.user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+  end
+
+  def correct_code
+    if Student.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
 
   # POST /students or /students.json
   def create
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "create_student")
       redirect_to root_path
     end
     email = params[:student][:email]
@@ -47,7 +64,7 @@ class StudentsController < ApplicationController
         @student = Student.new(student_params)
         @student.user_id = @user.id
         if @student.save
-          if (not current_user.nil? and current_user.user_role == "admin")
+          if not current_user.nil? and current_user.user_role == "admin"
             format.html { redirect_to @student, notice: "Student was successfully created by Admin." }
             format.json { render :show, status: :created, location: @student }
           else
@@ -65,7 +82,7 @@ class StudentsController < ApplicationController
 
   # PATCH/PUT /students/1 or /students/1.json
   def update
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "update_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "update_student")
       redirect_to root_path
     end
     respond_to do |format|
@@ -81,7 +98,7 @@ class StudentsController < ApplicationController
 
   # DELETE /students/1 or /students/1.json
   def destroy
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "delete_student"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "delete_student")
       redirect_to root_path
     end
 

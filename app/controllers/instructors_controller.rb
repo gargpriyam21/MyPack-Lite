@@ -1,25 +1,27 @@
 class InstructorsController < ApplicationController
   skip_before_action :authorized, only: [:new, :create]
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_instructor, only: %i[ show edit update destroy ]
+  before_action :correct_user, only: [:edit, :update, :destroy, :show]
 
   # GET /instructors or /instructors.json
   def index
-    if !check_permissions?(session[:user_role], "view_instructor")
+    unless check_permissions?(session[:user_role], "view_instructor")
       redirect_to root_path
     end
-    @instructors = Instructor.all
+    @instructors = Instructor.all.order("instructor_id ASC")
   end
 
   # GET /instructors/1 or /instructors/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_instructor")
+    unless check_permissions?(session[:user_role], "show_instructor")
       redirect_to root_path
     end
   end
 
   # GET /instructors/new
   def new
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    unless check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     @instructor = Instructor.new
@@ -27,14 +29,29 @@ class InstructorsController < ApplicationController
 
   # GET /instructors/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_instructor")
+    unless check_permissions?(session[:user_role], "edit_instructor")
+      redirect_to root_path
+    end
+  end
+
+  def correct_user
+    if current_user.user_role != 'admin'
+      @instructor = Instructor.find_by_id(params[:id])
+      if !current_user.nil? && @instructor.user_id != current_user.id
+        redirect_to root_path
+      end
+    end
+  end
+
+  def correct_code
+    if Instructor.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
 
   # POST /instructors or /instructors.json
   def create
-    if (!current_user.nil? && !check_permissions?(session[:user_role], "create_instructor"))
+    if !current_user.nil? && !check_permissions?(session[:user_role], "create_instructor")
       redirect_to root_path
     end
     email = params[:instructor][:email]
@@ -47,7 +64,7 @@ class InstructorsController < ApplicationController
         @instructor = Instructor.new(instructor_params)
         @instructor.user_id = @user.id
         if @instructor.save
-          if (not current_user.nil? and current_user.user_role == "admin")
+          if not current_user.nil? and current_user.user_role == "admin"
             format.html { redirect_to @instructor, notice: "Instructor was successfully created by Admin." }
             format.json { render :show, status: :created, location: @instructor }
           else
@@ -55,6 +72,7 @@ class InstructorsController < ApplicationController
             format.json { render :show, status: :created, location: @instructor }
           end
         else
+          User.where(id: @user.id)[0].destroy
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @instructor.errors, status: :unprocessable_entity }
         end
@@ -64,7 +82,7 @@ class InstructorsController < ApplicationController
 
   # PATCH/PUT /instructors/1 or /instructors/1.json
   def update
-    if !check_permissions?(session[:user_role], "update_instructor")
+    unless check_permissions?(session[:user_role], "update_instructor")
       redirect_to root_path
     end
     respond_to do |format|
@@ -78,9 +96,17 @@ class InstructorsController < ApplicationController
     end
   end
 
+  def show_instructor_students
+    unless check_permissions?(session[:user_role], "show_instructor_students")
+      redirect_to root_path
+    end
+    @enrollments = Enrollment.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
+    @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id).order("student_code ASC")
+  end
+
   # DELETE /instructors/1 or /instructors/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_instructor")
+    unless check_permissions?(session[:user_role], "delete_instructor")
       redirect_to root_path
     end
     @instructor.destroy
