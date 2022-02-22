@@ -45,4 +45,24 @@ class InstructorsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to instructors_url
   end
+
+  test "should not create instructor with null values" do
+    post instructor_url, params: { instructor: {} }
+    assert_response :error
+  end
+
+  test "should not create instructor with invalid email" do
+    post students_url, params: { instructor: { department: 'adjvisudb', email: 'gfdbdsa#jbdsvj', instructor_id: 2, name: 'random', password: 'random' } }
+    assert_response :error
+  end
+
+  test "should not create instructor with invalid date of birth" do
+    post students_url, params: { instructor: { department: 'adjvisudb', email: 'gfdbdsa#jbdsvj', instructor_id: 2, name: 'random', password: 'random' } }
+    assert_response :error
+  end
+
+  test "should not create instructor with invalid phone_number" do
+    post students_url, params: { instructor: { department: 'adjvisudb', email: 'gfdbdsa#jbdsvj', instructor_id: 2, name: 'random', password: 'random' } }
+    assert_response :error
+  end
 end
