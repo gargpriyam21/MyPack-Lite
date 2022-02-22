@@ -167,10 +167,34 @@ rails server
         * If the role is student, it should show: “Role: **Student**” (bold)
     * *Note the formatting used.*
 
-### 8. Instructors
+### 8. Test Cases
+
+* Courses Controller Tests
+  * Should not create course with null values.
+  * Should not create course with negative capacity.
+  * Should not create course with null name only.
+  * Should not create course with null description only.
+  * Should not create course with null course code only.
+  * Should not create course with null room only.
+  * Should not create course with invalid course_code.
+  * Should not create course with weekday1 equal to weekday2.
+  * Should not create course with end_time less than start_time only.
+  * Should not create course with negative waitlist_capacity only.
+* Instructors Controller Tests
+  * Should not create instructor with null values.
+  * Should not create instructor with invalid email.
+  * Should not create instructor with invalid date of birth.
+  * Should not create instructor with invalid phone_number.
+* Students Controller Tests
+  * Should not create student with null values.
+  * Should not create student with invalid email.
+  * Should not create student with invalid date of birth.
+  * Should not create student with invalid phone_number.
+
+### 9. Instructors
 We would like to thank Dr. Edward Gehringer for helping us understand the process of building a good Object Oriented project. We would also like to thank the teaching assistants Kai Xiao, Vinay Deshmukh, John Bumgardner, Jialin Cui, Subodh Thota and Krishika Shivnani for their support throughout the project. We would also like to thank our mentor Naman Shrimali who has been very proactive and helpful throughout the project.
 
-### 9. Contributors
+### 10. Contributors
 
 ---
 
