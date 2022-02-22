@@ -13,8 +13,9 @@
 
   <% if current_user.user_role == "admin" %>
     <div>
-      <%= form.label :instructor_id, style: "display: block" %>
-      <%= form.text_field :instructor_id %>
+      <%= form.label "Instructor ID", style: "display: block" %>
+      <%= form.select :instructor_name, Instructor.all.collect {|x| [x.instructor_id]} %>
+      <%#= form.text_field :instructor_id %>
     </div>
   <% end %>
 
@@ -36,7 +37,7 @@
   <div>
     <%= form.label :weekday2, style: "display: block" %>
     <%#= form.text_field :weekday1 %>
-    <%= form.select :weekday2,['MON','TUE','WED','THU','None'] %>
+    <%= form.select :weekday2,[' ','MON','TUE','WED','THU'] %>
   </div>
 
   <div>
