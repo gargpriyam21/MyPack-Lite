@@ -72,6 +72,7 @@ class InstructorsController < ApplicationController
             format.json { render :show, status: :created, location: @instructor }
           end
         else
+          User.where(id: @user.id)[0].destroy
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @instructor.errors, status: :unprocessable_entity }
         end
