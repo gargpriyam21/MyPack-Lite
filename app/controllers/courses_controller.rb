@@ -230,15 +230,8 @@ class CoursesController < ApplicationController
     @waitlist[0].destroy
     @course.update(students_waitlisted: (@course.students_waitlisted - 1))
 
-    if @course.status == "WAITLIST"
-      @course.update(status: "OPEN")
-    elsif @course.status == "CLOSED"
-      if @course.waitlist_capacity == 0
-        @course.update(status: "OPEN")
-      else
+    if @course.status == "CLOSED"
         @course.update(status: "WAITLIST")
-      end
-
     end
     respond_to do |format|
       format.html { redirect_to student_waitlists_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
