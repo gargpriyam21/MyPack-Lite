@@ -1,10 +1,10 @@
 class WaitlistsController < ApplicationController
-  skip_before_action :authorized, only: [:index]
+  before_action :correct_code, only: [:edit, :update, :destroy, :show]
   before_action :set_waitlist, only: %i[ show edit update destroy ]
 
   # GET /waitlists or /waitlists.json
   def index
-    if !check_permissions?(session[:user_role], "view_waitlist")
+    unless check_permissions?(session[:user_role], "view_waitlist")
       redirect_to root_path
     end
     @waitlists = Waitlist.all
@@ -12,14 +12,14 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists/1 or /waitlists/1.json
   def show
-    if !check_permissions?(session[:user_role], "show_waitlist")
+    unless check_permissions?(session[:user_role], "show_waitlist")
       redirect_to root_path
     end
   end
 
   # GET /waitlists/new
   def new
-    if !check_permissions?(session[:user_role], "create_waitlist")
+    unless check_permissions?(session[:user_role], "create_waitlist")
       redirect_to root_path
     end
     @waitlist = Waitlist.new
@@ -27,13 +27,19 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists/1/edit
   def edit
-    if !check_permissions?(session[:user_role], "edit_waitlist")
+    unless check_permissions?(session[:user_role], "edit_waitlist")
+      redirect_to root_path
+    end
+  end
+
+  def correct_code
+    if Waitlist.find_by_id(params[:id]).nil?
       redirect_to root_path
     end
   end
 
   def show_instructor_students_waitlisted
-    if !check_permissions?(session[:user_role], "show_instructor_students_enrolled")
+    unless check_permissions?(session[:user_role], "show_instructor_students_waitlisted")
       redirect_to root_path
     end
     @waitlists = Waitlist.where(instructor_id: Instructor.find_by_user_id(session[:user_id]).id)
@@ -41,7 +47,7 @@ class WaitlistsController < ApplicationController
 
   # POST /waitlists or /waitlists.json
   def create
-    if !check_permissions?(session[:user_role], "create_waitlist")
+    unless check_permissions?(session[:user_role], "create_waitlist")
       redirect_to root_path
     end
 
@@ -76,7 +82,7 @@ class WaitlistsController < ApplicationController
           else
             if @course.status != 'CLOSED'
               if already_waitlisted
-                format.html {redirect_to show_instructor_students_waitlisted_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s}
+                format.html { redirect_to show_instructor_students_waitlisted_path, alert: @student.name.to_s + " is already waitlisted in " + @course.course_code.to_s }
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 #render show_instructor_students_waitlisted_path
               else
@@ -95,7 +101,7 @@ class WaitlistsController < ApplicationController
                     format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                   end
                 else
-                  format.html { redirect_to show_instructor_students_waitlisted_path,alert: "Waitlist capacity is full" }
+                  format.html { redirect_to show_instructor_students_waitlisted_path, alert: "Waitlist capacity is full" }
                   format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 end
               end
@@ -133,7 +139,7 @@ class WaitlistsController < ApplicationController
                   format.json { render json: @waitlist.errors, status: :unprocessable_entity }
                 end
               else
-                format.html { redirect_to admins,alert: "Waitlist capacity is full" }
+                format.html { redirect_to admins, alert: "Waitlist capacity is full" }
                 format.json { render json: @waitlist.errors, status: :unprocessable_entity }
               end
             end
@@ -160,36 +166,41 @@ class WaitlistsController < ApplicationController
   end
 
   def remove_list
-    if !check_permissions?(session[:user_role], "remove_waitlist")
+    unless check_permissions?(session[:user_role], "remove_waitlist")
       redirect_to root_path
     end
 
     @waitlist = Waitlist.find_by_id(params[:id])
 
-    @waitlist.destroy
     @course = Course.find_by_id(@waitlist.course_id)
     @student = Student.find_by_id(@waitlist.student_id)
 
+    @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+    if @course.status = "CLOSED"
+      @course.update(status: "WAITLIST")
+    end
+
+    @waitlist.destroy
 
     respond_to do |format|
-      format.html { redirect_to show_instructor_students_waitlisted_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
-      @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+      format.html { redirect_to show_instructor_students_path, notice: @student.name.to_s + " has been successfully removed from waitlist in " + @course.course_code.to_s }
+      format.json { head :no_content }
     end
   end
 
   # DELETE /waitlists/1 or /waitlists/1.json
   def destroy
-    if !check_permissions?(session[:user_role], "delete_waitlist")
+    unless check_permissions?(session[:user_role], "delete_waitlist")
       redirect_to root_path
     end
 
-    @courses = Course.find_by_id(id: @enrollment.course_id)
-    @courses.each do |course|
-      course.update(students_waitlisted: (@course.students_waitlisted - 1))
-      if course.status = "CLOSED"
-        course.update(status: "WAITLIST")
-      end
+    @course = Course.find_by_id(@waitlist.course_id)
+
+    @course.update(students_waitlisted: (@course.students_waitlisted - 1))
+    if @course.status = "CLOSED"
+      @course.update(status: "WAITLIST")
     end
+
     @waitlist.destroy
 
     respond_to do |format|
@@ -210,3 +221,4 @@ class WaitlistsController < ApplicationController
     params.require(:waitlist).permit(:student_code, :course_code)
   end
 end
+

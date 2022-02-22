@@ -1,6 +1,9 @@
 <%= link_to 'Home page', root_path %>
 <h1>MyPack Lite</h1>
 
+<p style="color: green"><%= notice %></p>
+<b><p style="color: red"><%= alert %></p></b>
+
 <% if current_user %>
   <% if current_user.user_role == "student" %>
     Name: <%= Student.find_by_email(current_user.email).name.to_s.gsub(/\b('?[a-z])/) { $1.capitalize } %>

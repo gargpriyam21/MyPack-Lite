@@ -1,7 +1,4 @@
-<p style="color: green"><%= notice %></p>
-<b><p style="color: red"><%= alert %></p></b>
-
-<h1>Courses</h1>
+<h1>Enrolled Courses</h1>
 
 <table>
   <thead>
@@ -13,6 +10,7 @@
     <th>Room</th>
     <th>Time</th>
     <th>Capacity</th>
+    <th>Waitlist Capacity</th>
     <th>Status</th>
     <th colspan="2"></th>
   </tr>
@@ -32,6 +30,7 @@
       <td><%= course.room %></td>
       <td><%= course.start_time + ' - ' + course.end_time %></td>
       <td><%= course.students_enrolled.to_s + '/' + course.capacity.to_s %></td>
+      <td><%= course.students_waitlisted.to_s + '/' + course.waitlist_capacity.to_s %></td>
       <td><%= course.status %></td>
       <td><%= link_to 'Show', course %></td>
       <td><%= link_to 'Drop', drop_course_path(course), method: :post, data: { confirm: 'Are you sure?' } %></td>

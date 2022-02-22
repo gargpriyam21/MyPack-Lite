@@ -1,11 +1,14 @@
-<p style="color: green"><%= notice %></p>
-<b><p style="color: red"><%= alert %></p></b>
-
 <%= render @enrollment %>
 
 <div>
-  <%= link_to "Edit this enrollment", edit_enrollment_path(@enrollment) %> |
-  <%= link_to "Back to enrollments", enrollments_path %>
+<!--  <%#= link_to "Edit this enrollment", edit_enrollment_path(@enrollment) %> <br><br>-->
+  <%= button_to "Destroy this enrollment", @enrollment, method: :delete %><br>
 
-  <%= button_to "Destroy this enrollment", @enrollment, method: :delete %>
+  <% if current_user.user_role == 'admin' %>
+    <%= link_to "All Enrollments", all_enrollments_path %> <br><br>
+    <%elsif current_user.user_role == 'instructor' %>
+    <%= link_to "My Students", show_instructor_students_path %><br><br>
+  <% end %>
+
+  <%= link_to "Back to enrollments", enrollments_path %>
 </div>
