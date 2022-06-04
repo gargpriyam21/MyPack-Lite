@@ -1,9 +1,13 @@
 # MyPack Lite: Student Enrollment System
 
-**Please update on this email if application is not running on VCL: pgarg6@ncsu.edu**
+A ruby on rails full stack web application for the class and subject enrollment system for students and instructors.
 
-## Link to the deployed application
-http://152.7.98.85:8080/
+Technologies and Tools:
+- Ruby
+- Ruby on Rails
+- HTML
+- SQLIte Database
+- Object Oriented Programming
 
 ## Admin credentials
 * email : admin@ncsu.edu
@@ -13,11 +17,11 @@ http://152.7.98.85:8080/
 
 * Clone this repository
 ```
-git clone https://github.ncsu.edu/pgarg6/OODD_Program2_RonR.git
+git clone https://github.com/gargpriyam21/MyPack-Lite.git
 ```
 * Go to the directory
 ```
-OODD_Program2_RonR
+cd MyPack-Lite
 ```
 * Install required gems
 ```
@@ -192,16 +196,4 @@ rails server
   * Should not create student with invalid phone_number.
 
 ### 9. Instructors
-We would like to thank Dr. Edward Gehringer for helping us understand the process of building a good Object Oriented project. We would also like to thank the teaching assistants Kai Xiao, Vinay Deshmukh, John Bumgardner, Jialin Cui, Subodh Thota and Krishika Shivnani for their support throughout the project. We would also like to thank our mentor Naman Shrimali who has been very proactive and helpful throughout the project.
-
-### 10. Contributors
-
----
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.ncsu.edu/pgarg6"><img src="https://avatars.github.ncsu.edu/u/22726" width="75px;" alt=""/><br /><sub><b>Priyam Garg</b></sub></a></td>
-    <td align="center"><a href="https://github.ncsu.edu/dmehta3"><img src="https://avatars.github.ncsu.edu/u/22722" width="75px;" alt=""/><br /><sub><b>Dev Gaurangbhai Mehta</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.ncsu.edu/mrjain"><img src="https://avatars.github.ncsu.edu/u/22648" width="75px;" alt=""/><br /><sub><b>Moksh Jain</b></sub></a><br /></td>
-  </tr>
-</table>
+We would like to thank Dr. Edward Gehringer for helping us understand the process of building a good Object Oriented project.
